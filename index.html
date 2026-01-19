@@ -1,251 +1,198 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ahyron – El Lobo Salvaje</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahyron — El Lobo Salvaje</title>
 
-  <style>
-    /* ─────────── ANIMACIONES BASE ─────────── */
-    @keyframes glow {
-      0% { box-shadow: 0 0 12px rgba(120,255,255,0.15); }
-      50% { box-shadow: 0 0 35px rgba(120,255,255,0.45); }
-      100% { box-shadow: 0 0 12px rgba(120,255,255,0.15); }
-    }
+<style>
+:root{
+  --aqua:#7fffd4;
+  --dark:#020a0d;
+}
 
-    @keyframes breathe {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.035); }
-      100% { transform: scale(1); }
-    }
+*{box-sizing:border-box}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+body{
+  margin:0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: radial-gradient(circle at top, #000, #050d12, #000);
+  color:#e6f1f1;
+}
 
-    /* ─────────── BASE ─────────── */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at top, #000000, #050d12, #000000);
-      color: #e6f1f1;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: default;
-    }
+section{
+  padding:90px 20px;
+  text-align:center;
+}
 
-    .card {
-      max-width: 950px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(5,15,20,0.97));
-      border-radius: 26px;
-      overflow: hidden;
-      animation: glow 5s infinite;
-    }
+.card{
+  max-width:900px;
+  margin:auto;
+  background:linear-gradient(180deg, rgba(0,0,0,.85), rgba(5,15,20,.95));
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(120,255,255,.25);
+}
 
-    /* ─────────── IMÁGENES ─────────── */
-    .image-container {
-      position: relative;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.4s ease;
-    }
+/* ================= IMÁGENES ================= */
 
-    .image-container.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.hero{
+  position:relative;
+  height:520px;
+}
 
-    .image-container img {
-      width: 100%;
-      display: block;
-      filter: contrast(118%) saturate(120%);
-      animation: breathe 14s ease-in-out infinite;
-    }
+.hero img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 2s ease;
+}
 
-    .image-container::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-    }
+.hero img.active{
+  opacity:1;
+}
 
-    .image-caption {
-      position: absolute;
-      bottom: 14px;
-      left: 20px;
-      font-size: 0.75rem;
-      color: #8fdede;
-      opacity: 0.7;
-    }
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.85), transparent);
+}
 
-    /* ─────────── CONTENIDO ─────────── */
-    .content {
-      padding: 45px 32px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.4s ease;
-    }
+/* ================= TEXTO ================= */
 
-    .content.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+h1{
+  font-size:3.2rem;
+  letter-spacing:5px;
+  margin:0;
+}
 
-    h1 {
-      font-size: 3.4rem;
-      margin: 0;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
+h2{
+  font-weight:300;
+  color:var(--aqua);
+  margin:15px 0 40px;
+  letter-spacing:2px;
+}
 
-    h2 {
-      font-weight: 300;
-      margin: 14px 0 34px;
-      color: #7fffd4;
-      letter-spacing: 2px;
-    }
+p{
+  max-width:700px;
+  margin:auto;
+  line-height:1.9;
+  font-size:1.1rem;
+}
 
-    p {
-      font-size: 1.12rem;
-      line-height: 1.85;
-      color: #d8eaea;
-      max-width: 720px;
-      margin: auto;
-    }
+.quote{
+  margin-top:40px;
+  font-style:italic;
+  color:#9fdede;
+}
 
-    strong {
-      color: #aef3e6;
-      font-weight: 600;
-    }
+/* ================= MANADA ================= */
 
-    .quote {
-      margin-top: 36px;
-      font-style: italic;
-      font-size: 1.05rem;
-      color: #9fdede;
-    }
+.manada{
+  opacity:0;
+  transform:translateY(40px);
+  transition:1.5s ease;
+}
 
-    /* ─────────── MANADA ─────────── */
-    .manada {
-      margin-top: 70px;
-      padding: 50px 30px;
-      border-top: 1px solid rgba(127,255,212,0.25);
-      box-shadow: inset 0 18px 45px rgba(0,0,0,0.85);
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.4s ease;
-    }
+.manada.visible{
+  opacity:1;
+  transform:none;
+}
 
-    .manada.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.manada h2{
+  margin-bottom:30px;
+}
 
-    .manada h3 {
-      color: #7fffd4;
-      letter-spacing: 3px;
-      font-size: 1.7rem;
-      margin-bottom: 28px;
-      text-transform: uppercase;
-    }
+/* ================= FOOTER ================= */
 
-    .manada p {
-      font-size: 1.05rem;
-      line-height: 1.9;
-      color: #cfeeee;
-    }
-
-    footer {
-      margin-top: 55px;
-      font-size: 0.8rem;
-      color: #88aaaa;
-      letter-spacing: 1px;
-    }
-  </style>
+footer{
+  margin-top:60px;
+  font-size:.85rem;
+  color:#88aaaa;
+  letter-spacing:1px;
+}
+</style>
 </head>
 
 <body>
-  <div class="card">
 
-    <!-- IMAGEN 1 -->
-    <div class="image-container reveal">
-      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el lobo salvaje" />
-    </div>
+<div class="card">
 
-    <!-- IMAGEN 2 -->
-    <div class="image-container reveal">
-      <img src="NOMBRE_DE_TU_SEGUNDA_IMAGEN.jpeg" alt="Ahyron ante el umbral" />
-      <div class="image-caption">Ahyron ante el umbral</div>
-    </div>
-
-    <!-- CONTENIDO -->
-    <div class="content reveal">
-      <h1>Ahyron</h1>
-      <h2>El Lobo Salvaje</h2>
-
-      <p>
-        <strong>Nacido del silencio y la sombra,</strong> bajo la misma luna y la misma tierra.<br>
-        Sus ojos no buscan temor, sino el amor.<br><br>
-
-        Ahyron no obedece fronteras ni voces ajenas.<br>
-        Mira la noche sin temor, atento a un mundo que no se deja dominar.<br><br>
-
-        No ataca por impulso, sino por instinto.<br>
-        No actúa por seguir al rebaño, sino por convicción.<br>
-        <strong>Su fuerza no es individual: es colectiva.</strong><br><br>
-
-        Vigila, protege y pertenece.<br>
-        <strong>La manada.</strong><br><br>
-
-        Allí donde se detiene, el entorno cambia.<br>
-        Nada se impone.
-      </p>
-
-      <div class="quote">
-        “La noche no me teme. La noche me pertenece.”
-      </div>
-    </div>
-
-    <!-- MANADA -->
-    <div class="manada reveal">
-      <h3>La Manada</h3>
-      <p>
-        La manada no se forma por número, sino por lealtad.<br>
-        Aquí no hay líderes impuestos ni voces vacías.<br><br>
-
-        Cada paso es compartido.<br>
-        Cada vigilia es mutua.<br>
-        Cada decisión se sostiene entre todos.<br><br>
-
-        La manada no sigue.<br>
-        <strong>Avanza.</strong>
-      </p>
-    </div>
-
-    <footer>
-      © 2026 · Ahyron · Espíritu indomable
-    </footer>
-
+  <!-- IMÁGENES -->
+  <div class="hero">
+    <img src="img/ahyron-umbral.jpg" class="active" alt="Ahyron ante el umbral">
+    <img src="img/ahyron-puerta.jpg" alt="Ahyron vigilante">
   </div>
 
-  <!-- ─────────── SCRIPT SCROLL ─────────── -->
-  <script>
-    const reveals = document.querySelectorAll('.reveal');
+  <!-- TEXTO -->
+  <section>
+    <h1>AHYRON</h1>
+    <h2>El Lobo Salvaje</h2>
 
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
+    <p>
+      Nacido del silencio y la sombra, bajo la misma luna y la misma tierra.<br>
+      Sus ojos no buscan temor, sino el amor.<br><br>
 
-    reveals.forEach(el => observer.observe(el));
-  </script>
+      Ahyron no obedece fronteras ni voces ajenas.<br>
+      Mira la noche sin temor, atento a un mundo que no se deja dominar.<br><br>
+
+      No ataca por impulso, sino por instinto.<br>
+      No actúa por seguir al rebaño, sino por convicción.<br>
+      Su fuerza no es individual: es colectiva.<br>
+      Vigila, protege y pertenece.<br>
+      La manada.
+    </p>
+
+    <div class="quote">
+      “La noche no le teme. La noche le pertenece.”
+    </div>
+  </section>
+
+  <!-- MANADA -->
+  <section class="manada" id="manada">
+    <h2>LA MANADA</h2>
+    <p>
+      La manada no se forma por número, sino por lealtad.<br>
+      Aquí no hay líderes impuestos ni voces vacías.<br><br>
+
+      Cada paso es compartido.<br>
+      Cada vigilia es mutua.<br>
+      Cada decisión se sostiene entre todos.<br><br>
+
+      La manada no sigue.<br>
+      Avanza.
+    </p>
+  </section>
+
+  <footer>
+    © 2026 · Ahyron · Espíritu indomable
+  </footer>
+
+</div>
+
+<script>
+/* ======= FUNDIDO DE IMÁGENES ======= */
+const imgs=document.querySelectorAll('.hero img');
+let i=0;
+setInterval(()=>{
+  imgs[i].classList.remove('active');
+  i=(i+1)%imgs.length;
+  imgs[i].classList.add('active');
+},6000);
+
+/* ======= SCROLL MANADA ======= */
+const manada=document.getElementById('manada');
+window.addEventListener('scroll',()=>{
+  const y=manada.getBoundingClientRect().top;
+  if(y < window.innerHeight-120){
+    manada.classList.add('visible');
+  }
+});
+</script>
 
 </body>
 </html>
