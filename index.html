@@ -4,22 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ahyron – El Lobo Salvaje</title>
+
   <style>
     @keyframes glow {
-      0% { box-shadow: 0 0 10px rgba(120,255,255,0.2); }
-      50% { box-shadow: 0 0 30px rgba(120,255,255,0.6); }
-      100% { box-shadow: 0 0 10px rgba(120,255,255,0.2); }
+      0% { box-shadow: 0 0 12px rgba(120,255,255,0.2); }
+      50% { box-shadow: 0 0 35px rgba(120,255,255,0.55); }
+      100% { box-shadow: 0 0 12px rgba(120,255,255,0.2); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at top, #000000, #050d12, #000000);
+      background: radial-gradient(circle at top, #000, #050d12, #000);
       color: #e6f1f1;
       min-height: 100vh;
       display: flex;
@@ -29,7 +30,7 @@
 
     .card {
       max-width: 950px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(5,15,20,0.95));
+      background: linear-gradient(180deg, rgba(0,0,0,0.88), rgba(5,15,20,0.96));
       border-radius: 25px;
       overflow: hidden;
       animation: glow 4s infinite;
@@ -37,25 +38,39 @@
 
     .image-container {
       position: relative;
+      overflow: hidden;
     }
 
     .image-container img {
       width: 100%;
       display: block;
       filter: contrast(115%) saturate(120%);
+      transition: opacity 1.6s ease;
     }
 
     .image-container::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+    }
+
+    /* Imagen que aparece con scroll */
+    .scroll-image {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.6s ease, transform 1.6s ease;
+    }
+
+    .scroll-image.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .content {
       padding: 40px 30px;
       text-align: center;
-      animation: fadeIn 1.8s ease-out;
+      animation: fadeUp 1.8s ease-out;
     }
 
     h1 {
@@ -74,9 +89,9 @@
 
     p {
       font-size: 1.15rem;
-      line-height: 1.8;
+      line-height: 1.85;
       color: #d8eaea;
-      max-width: 700px;
+      max-width: 720px;
       margin: auto;
     }
 
@@ -87,45 +102,113 @@
       color: #9fdede;
     }
 
+    /* ===== SECCIÓN MANADA ===== */
+
+    .manada {
+      margin-top: 80px;
+      padding: 60px 30px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+      text-align: center;
+    }
+
+    .manada h3 {
+      font-size: 2.2rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      color: #7fffd4;
+    }
+
+    .manada p {
+      font-size: 1.05rem;
+      max-width: 680px;
+      line-height: 1.8;
+      color: #cfeaea;
+    }
+
     footer {
-      margin-top: 40px;
+      margin-top: 50px;
       font-size: 0.85rem;
       color: #88aaaa;
       letter-spacing: 1px;
+      text-align: center;
     }
   </style>
 </head>
+
 <body>
   <div class="card">
+
+    <!-- Imagen principal -->
     <div class="image-container">
-      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el lobo salvaje" />
+      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el lobo salvaje">
     </div>
+
+    <!-- Imagen secundaria (aparece con scroll) -->
+    <div class="image-container scroll-image">
+      <img src="2e825b17-26e5-45a6-91e3-4da044c241d7.jpeg" alt="Ahyron ante el umbral">
+    </div>
+
     <div class="content">
       <h1>Ahyron</h1>
       <h2>El Lobo Salvaje</h2>
+
       <p>
-       Nacido del silencio y la sombra, bajo la misma luna y la misma tierra.
-Sus ojos no buscan temor, sino el Amor.
-        Ahyron no obedece fronteras ni voces ajenas.
-Mira la noche sin temor, atento a un mundo que no se deja dominar.
+        Nacido del silencio y la sombra, bajo la misma luna y la misma tierra.<br>
+        Sus ojos no buscan temor, sino el amor.<br><br>
 
-No ataca por impulso, sino por instinto.
-No actúa por seguir al rebaño, sino por convicción.
-Su fuerza no es individual: es colectiva.
-Vigila, protege y pertenece.
-La manada.
+        Ahyron no obedece fronteras ni voces ajenas.<br>
+        Mira la noche sin temor, atento a un mundo que no se deja dominar.<br><br>
 
-Allí donde se detiene, el entorno cambia.
-Nada se impone.
+        No ataca por impulso, sino por instinto.<br>
+        No actúa por seguir al rebaño, sino por convicción.<br>
+        Su fuerza no es individual: es colectiva.<br>
+        Vigila, protege y pertenece.<br>
+        La manada.<br><br>
+
+        Allí donde se detiene, el entorno cambia.<br>
+        Nada se impone.
       </p>
+
       <div class="quote">
         “La noche no me teme. La noche me pertenece.”
       </div>
-      <footer>
-        © 2026 · Ahyron · Espíritu indomable
-      </footer>
     </div>
+
+    <!-- SECCIÓN MANADA -->
+    <section class="manada">
+      <h3>La Manada</h3>
+      <p>
+        La manada no se forma por número, sino por lealtad.<br>
+        Aquí no hay líderes impuestos ni voces vacías.<br><br>
+
+        Cada paso es compartido.<br>
+        Cada vigilia es mutua.<br>
+        Cada decisión se sostiene entre todos.<br><br>
+
+        La manada no sigue.<br>
+        Avanza.
+      </p>
+    </section>
+
+    <footer>
+      © 2026 · Ahyron · Espíritu indomable
+    </footer>
   </div>
+
+  <!-- SCRIPT SCROLL -->
+  <script>
+    const scrollImage = document.querySelector('.scroll-image');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          scrollImage.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(scrollImage);
+  </script>
 </body>
 </html>
-
