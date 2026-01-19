@@ -1,188 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ahyron – El Lobo Salvaje</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahyron – El Lobo Salvaje</title>
 
-  <style>
-    /* ─────────── ANIMACIONES ─────────── */
-    @keyframes breathe {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
-    }
+<style>
+/* ─────────── BASE ─────────── */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at top, #000000, #050d12, #000000);
+  color: #e6f1f1;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
 
-    /* ─────────── BASE ─────────── */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at top, #000000, #050d12, #000000);
-      color: #e6f1f1;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr minmax(320px, 950px) 1fr;
+  width: 100%;
+}
 
-    .card {
-      max-width: 950px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(5,15,20,0.98));
-      border-radius: 26px;
-      overflow: hidden;
+/* ─────────── LATERALES ─────────── */
+.side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1.6s ease;
+}
 
-      /* SOMBRA FIJA (SIN ANIMACIÓN) */
-      box-shadow:
-        0 0 35px rgba(0, 0, 0, 0.9),
-        0 0 18px rgba(120, 255, 255, 0.12);
-    }
+.side.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    /* ─────────── IMÁGENES ─────────── */
-    .image-container {
-      position: relative;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.4s ease;
-    }
+.side-content {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: rgba(127,255,212,0.35);
+  text-transform: uppercase;
+}
 
-    .image-container.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.side::before {
+  content: "";
+  position: absolute;
+  height: 60%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(127,255,212,0.35),
+    transparent
+  );
+}
 
-    .image-container img {
-      width: 100%;
-      display: block;
-      filter: contrast(118%) saturate(120%);
-      animation: breathe 16s ease-in-out infinite;
-    }
+/* ─────────── CARD ─────────── */
+.card {
+  background: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(5,15,20,0.98));
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow:
+    0 0 35px rgba(0,0,0,0.9),
+    0 0 18px rgba(120,255,255,0.12);
+  margin: 60px 0;
+}
 
-    .image-container::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%);
-    }
+/* ─────────── IMAGEN ─────────── */
+.image-container {
+  position: relative;
+}
 
-    .image-caption {
-      position: absolute;
-      bottom: 14px;
-      left: 20px;
-      font-size: 0.75rem;
-      color: #8fdede;
-      opacity: 0.7;
-    }
+.image-container img {
+  width: 100%;
+  display: block;
+  filter: contrast(118%) saturate(120%);
+}
 
-    /* ─────────── CONTENIDO ─────────── */
-    .content {
-      padding: 45px 32px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.4s ease;
-    }
+.image-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%);
+}
 
-    .content.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+/* ─────────── CONTENIDO ─────────── */
+.content {
+  padding: 45px 32px;
+  text-align: center;
+}
 
-    h1 {
-      font-size: 3.4rem;
-      margin: 0;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
+h1 {
+  font-size: 3.4rem;
+  margin: 0;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
 
-    h2 {
-      font-weight: 300;
-      margin: 14px 0 34px;
-      color: #7fffd4;
-      letter-spacing: 2px;
-    }
+h2 {
+  font-weight: 300;
+  margin: 14px 0 34px;
+  color: #7fffd4;
+  letter-spacing: 2px;
+}
 
-    p {
-      font-size: 1.12rem;
-      line-height: 1.85;
-      color: #d8eaea;
-      max-width: 720px;
-      margin: auto;
-    }
+p {
+  font-size: 1.12rem;
+  line-height: 1.85;
+  color: #d8eaea;
+  max-width: 720px;
+  margin: auto;
+}
 
-    strong {
-      color: #aef3e6;
-      font-weight: 600;
-    }
+strong {
+  color: #aef3e6;
+}
 
-    .quote {
-      margin-top: 36px;
-      font-style: italic;
-      font-size: 1.05rem;
-      color: #9fdede;
-    }
+/* ─────────── MANADA ─────────── */
+.manada {
+  margin-top: 70px;
+  padding: 50px 30px;
+  border-top: 1px solid rgba(127,255,212,0.25);
+  box-shadow: inset 0 18px 45px rgba(0,0,0,0.85);
+  text-align: center;
+}
 
-    /* ─────────── MANADA ─────────── */
-    .manada {
-      margin-top: 70px;
-      padding: 50px 30px;
-      border-top: 1px solid rgba(127,255,212,0.25);
-      box-shadow: inset 0 18px 45px rgba(0,0,0,0.85);
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.4s ease;
-    }
+.manada h3 {
+  color: #7fffd4;
+  letter-spacing: 3px;
+  font-size: 1.7rem;
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
 
-    .manada.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+footer {
+  margin: 55px 0 30px;
+  font-size: 0.8rem;
+  color: #88aaaa;
+  letter-spacing: 1px;
+  text-align: center;
+}
 
-    .manada h3 {
-      color: #7fffd4;
-      letter-spacing: 3px;
-      font-size: 1.7rem;
-      margin-bottom: 28px;
-      text-transform: uppercase;
-    }
-
-    .manada p {
-      font-size: 1.05rem;
-      line-height: 1.9;
-      color: #cfeeee;
-    }
-
-    footer {
-      margin-top: 55px;
-      font-size: 0.8rem;
-      color: #88aaaa;
-      letter-spacing: 1px;
-      text-align: center;
-      padding-bottom: 25px;
-    }
-
-    /* ─────────── ACCESIBILIDAD ─────────── */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-  </style>
+/* ─────────── RESPONSIVE ─────────── */
+@media (max-width: 900px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    display: none;
+  }
+}
+</style>
 </head>
 
 <body>
 
+<div class="wrapper">
+
+  <!-- LADO IZQUIERDO -->
+  <div class="side reveal">
+    <div class="side-content">Vigilia · Instinto · Silencio</div>
+  </div>
+
+  <!-- CARD CENTRAL -->
   <div class="card">
 
-    <!-- IMAGEN -->
-    <div class="image-container reveal">
-      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg"
-           alt="Ahyron el lobo salvaje"
-           loading="lazy">
+    <div class="image-container">
+      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron">
     </div>
 
-    <!-- CONTENIDO -->
-    <div class="content reveal">
+    <div class="content">
       <h1>Ahyron</h1>
       <h2>El Lobo Salvaje</h2>
 
@@ -200,23 +192,12 @@
         Vigila, protege y pertenece.<br>
         <strong>La manada.</strong>
       </p>
-
-      <div class="quote">
-        “La noche no le teme. La noche le pertenece.”
-      </div>
     </div>
 
-    <!-- MANADA -->
-    <div class="manada reveal">
+    <div class="manada">
       <h3>La Manada</h3>
       <p>
         La manada no se forma por número, sino por lealtad.<br>
-        Aquí no hay líderes impuestos ni voces vacías.<br><br>
-
-        Cada paso es compartido.<br>
-        Cada vigilia es mutua.<br>
-        Cada decisión se sostiene entre todos.<br><br>
-
         La manada no sigue.<br>
         <strong>Avanza.</strong>
       </p>
@@ -228,20 +209,26 @@
 
   </div>
 
-  <!-- ─────────── SCRIPT SCROLL ─────────── -->
-  <script>
-    const reveals = document.querySelectorAll('.reveal');
+  <!-- LADO DERECHO -->
+  <div class="side reveal">
+    <div class="side-content">Manada · Lealtad · Noche</div>
+  </div>
 
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
+</div>
 
-    reveals.forEach(el => observer.observe(el));
-  </script>
+<script>
+const reveals = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.2 });
+
+reveals.forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
