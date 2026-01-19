@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahyron – El Lobo Salvaje</title>
+  <style>
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(120,255,255,0.2); }
+      50% { box-shadow: 0 0 30px rgba(120,255,255,0.6); }
+      100% { box-shadow: 0 0 10px rgba(120,255,255,0.2); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #000000, #050d12, #000000);
+      color: #e6f1f1;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      max-width: 950px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(5,15,20,0.95));
+      border-radius: 25px;
+      overflow: hidden;
+      animation: glow 4s infinite;
+    }
+
+    .image-container {
+      position: relative;
+    }
+
+    .image-container img {
+      width: 100%;
+      display: block;
+      filter: contrast(115%) saturate(120%);
+    }
+
+    .image-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+
+    .content {
+      padding: 40px 30px;
+      text-align: center;
+      animation: fadeIn 1.8s ease-out;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin: 0;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-weight: 300;
+      margin: 15px 0 30px;
+      color: #7fffd4;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #d8eaea;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .quote {
+      margin-top: 35px;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #9fdede;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: #88aaaa;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="image-container">
+      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el lobo salvaje" />
+    </div>
+    <div class="content">
+      <h1>Ahyron</h1>
+      <h2>El Lobo Salvaje</h2>
+      <p>
+        Nacido del silencio y la sombra, Ahyron no sigue manadas ni fronteras.
+        Sus ojos arden como brasas en la noche, observando un mundo que no puede
+        ser domesticado. No caza por hambre, sino por destino. Donde camina,
+        el bosque recuerda.
+      </p>
+      <div class="quote">
+        “La noche no me teme. La noche me pertenece.”
+      </div>
+      <footer>
+        © 2026 · Ahyron · Espíritu indomable
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
