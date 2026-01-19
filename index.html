@@ -6,22 +6,11 @@
   <title>Ahyron – El Lobo Salvaje</title>
 
   <style>
-    /* ─────────── ANIMACIONES BASE ─────────── */
-    @keyframes glow {
-      0% { box-shadow: 0 0 12px rgba(120,255,255,0.15); }
-      50% { box-shadow: 0 0 35px rgba(120,255,255,0.45); }
-      100% { box-shadow: 0 0 12px rgba(120,255,255,0.15); }
-    }
-
+    /* ─────────── ANIMACIONES ─────────── */
     @keyframes breathe {
       0% { transform: scale(1); }
-      50% { transform: scale(1.035); }
+      50% { transform: scale(1.03); }
       100% { transform: scale(1); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ─────────── BASE ─────────── */
@@ -34,15 +23,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: default;
     }
 
     .card {
       max-width: 950px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(5,15,20,0.97));
+      background: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(5,15,20,0.98));
       border-radius: 26px;
       overflow: hidden;
-      animation: glow 5s infinite;
+
+      /* SOMBRA FIJA (SIN ANIMACIÓN) */
+      box-shadow:
+        0 0 35px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(120, 255, 255, 0.12);
     }
 
     /* ─────────── IMÁGENES ─────────── */
@@ -62,14 +54,14 @@
       width: 100%;
       display: block;
       filter: contrast(118%) saturate(120%);
-      animation: breathe 14s ease-in-out infinite;
+      animation: breathe 16s ease-in-out infinite;
     }
 
     .image-container::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%);
     }
 
     .image-caption {
@@ -164,16 +156,29 @@
       font-size: 0.8rem;
       color: #88aaaa;
       letter-spacing: 1px;
+      text-align: center;
+      padding-bottom: 25px;
+    }
+
+    /* ─────────── ACCESIBILIDAD ─────────── */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <div class="card">
 
-    <!-- IMAGEN 1 -->
+    <!-- IMAGEN -->
     <div class="image-container reveal">
-      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el lobo salvaje" />
+      <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg"
+           alt="Ahyron el lobo salvaje"
+           loading="lazy">
     </div>
 
     <!-- CONTENIDO -->
@@ -193,10 +198,7 @@
         <strong>Su fuerza no es individual: es colectiva.</strong><br><br>
 
         Vigila, protege y pertenece.<br>
-        <strong>La manada.</strong><br><br>
-
-        Allí donde se detiene, el entorno cambia.<br>
-        Nada se impone.
+        <strong>La manada.</strong>
       </p>
 
       <div class="quote">
