@@ -14,18 +14,16 @@
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background: radial-gradient(circle at top, #000000, #050d12, #000000);
             color: #e6f1f1;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             transition: background 1.2s ease, color 1.2s ease;
-            cursor: default;
             overflow-x: hidden;
         }
 
-        /* Modo Claro Mejorado */
         body.light {
             background: radial-gradient(circle at top, #ffffff, #e0e7e7);
             color: #1a1a1a;
@@ -103,20 +101,21 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* ─────────── IMAGEN CON PARALAJE ─────────── */
+        /* ─────────── IMAGEN ─────────── */
         .image-container {
             overflow: hidden;
-            height: 500px; /* Ajusta según tu imagen */
+            height: 500px;
             position: relative;
         }
 
         .image-container img {
             width: 100%;
-            height: 110%; /* Un poco más alta para permitir el movimiento */
+            height: 115%;
             object-fit: cover;
             display: block;
             filter: contrast(110%) saturate(110%);
-            transition: transform 0.2s ease-out; /* Suavidad para el ratón */
+            transition: transform 0.15s ease-out;
+            will-change: transform;
         }
 
         /* ─────────── CONTENIDO ─────────── */
@@ -167,6 +166,7 @@
             50% { text-shadow: 0 0 15px rgba(127,255,212,0.7); }
         }
 
+        /* ─────────── TEXTO REVELADO ─────────── */
         #manifesto span {
             opacity: 0;
             display: inline-block;
@@ -192,7 +192,6 @@
             50% { transform: scale(1.05); opacity: 1; }
         }
 
-        /* ─────────── MANADA ─────────── */
         .manada {
             margin-top: 40px;
             padding: 60px 30px;
@@ -202,16 +201,13 @@
 
         body.light .manada { background: #f9fdfd; }
 
-        /* ─────────── FOOTER ─────────── */
         footer {
             padding: 40px;
             font-size: 0.85rem;
             color: #88aaaa;
             text-align: center;
-            letter-spacing: 1px;
         }
 
-        /* ─────────── RESPONSIVE ─────────── */
         @media(max-width:900px){
             .wrapper { grid-template-columns: 1fr; }
             .side { display:none; }
@@ -230,7 +226,6 @@
 </audio>
 
 <div class="wrapper">
-
     <aside class="side reveal">
         <div class="side-content">Vigilia · Instinto · Silencio</div>
     </aside>
@@ -278,54 +273,49 @@
     <aside class="side reveal">
         <div class="side-content">Manada · Lealtad · Noche</div>
     </aside>
-
 </div>
 
 <script>
-    /* 1. EFECTO PARALAJE SUTIL EN LA IMAGEN */
+    /* 1. PARALAJE DE IMAGEN */
     const heroImg = document.getElementById('heroImage');
     document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 50;
-        const y = (window.innerHeight / 2 - e.pageY) / 50;
+        const x = (window.innerWidth / 2 - e.pageX) / 60;
+        const y = (window.innerHeight / 2 - e.pageY) / 60;
         heroImg.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
     });
 
-    /* 2. REVELADO AL HACER SCROLL (Lados) */
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-    }, { threshold: 0.1 });
+    /* 2. REVELADO AL CARGAR (AUTOMÁTICO) */
+    window.addEventListener('DOMContentLoaded', () => {
+        // Revelar laterales después de un momento
+        setTimeout(() => {
+            document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
+        }, 300);
 
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-
-    /* 3. MANEJO DE AUDIO Y SECUENCIA DE TEXTO */
-    const audio = document.getElementById("ambientSound");
-    const manifestoSpans = document.querySelectorAll("#manifesto span");
-    
-    function startExperience() {
-        // Iniciar audio
-        audio.volume = 0.2;
-        audio.play().catch(() => console.log("Audio bloqueado por el navegador"));
-        
-        // Iniciar secuencia de texto
+        // Secuencia de texto automática
+        const manifestoSpans = document.querySelectorAll("#manifesto span");
         manifestoSpans.forEach((line, i) => {
             setTimeout(() => {
                 line.classList.add("visible");
-            }, 600 + (i * 450));
+            }, 800 + (i * 500)); 
         });
-    }
+    });
 
-    // Iniciar con el primer clic del usuario
-    document.addEventListener("click", startExperience, { once: true });
+    /* 3. ACTIVACIÓN DE AUDIO POR INTERACCIÓN */
+    document.addEventListener("click", () => {
+        const audio = document.getElementById("ambientSound");
+        if (audio.paused) {
+            audio.volume = 0.2;
+            audio.play().catch(() => {});
+        }
+    }, { once: true });
 
-    /* 4. MODO DÍA / NOCHE AUTOMÁTICO */
+    /* 4. CONFIGURACIÓN HORARIA */
     const hour = new Date().getHours();
     if (hour >= 7 && hour < 19) {
         document.body.classList.add("light");
     }
 
-    /* 5. CONTADOR DE VISITAS */
+    /* 5. CONTADOR DE VISITAS LOCAL */
     let visits = Number(localStorage.getItem("ahyron_visits")) || 0;
     visits++;
     localStorage.setItem("ahyron_visits", visits);
