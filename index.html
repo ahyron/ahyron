@@ -34,7 +34,6 @@ body.light {
   display: grid;
   grid-template-columns: 1fr minmax(320px, 950px) 1fr;
   width: 100%;
-  position: relative;
 }
 
 /* ─────────── NIEBLA ─────────── */
@@ -122,6 +121,7 @@ h1 {
 h2 {
   font-weight: 300;
   color: #7fffd4;
+  margin-bottom: 34px;
 }
 
 p {
@@ -130,11 +130,24 @@ p {
   line-height: 1.85;
 }
 
+/* ─────────── BRILLO EN STRONG ─────────── */
+strong {
+  color: #aef3e6;
+  text-shadow: 0 0 6px rgba(127,255,212,0.4);
+  animation: glow 4.5s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%,100% { text-shadow: 0 0 6px rgba(127,255,212,0.35); }
+  50% { text-shadow: 0 0 14px rgba(127,255,212,0.8); }
+}
+
+/* ─────────── TEXTO RITUAL ─────────── */
 #manifesto span {
   opacity: 0;
   display: inline-block;
-  transform: translateY(10px);
-  transition: 0.6s ease;
+  transform: translateY(14px);
+  transition: all 0.9s ease;
 }
 
 #manifesto span.visible {
@@ -142,21 +155,33 @@ p {
   transform: translateY(0);
 }
 
-/* ─────────── MANADA CTA ─────────── */
-.join {
-  margin: 60px auto;
-  padding: 18px 36px;
-  border: 1px solid rgba(127,255,212,0.5);
-  display: inline-block;
+/* ─────────── ANIMACIÓN ESPECIAL ─────────── */
+#manifesto span.final {
+  font-size: 1.25rem;
   letter-spacing: 3px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.4s ease;
+  animation: pulse 3.5s ease-in-out infinite;
 }
 
-.join:hover {
-  background: rgba(127,255,212,0.15);
-  box-shadow: 0 0 18px rgba(127,255,212,0.6);
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* ─────────── MANADA ─────────── */
+.manada {
+  margin-top: 70px;
+  padding: 50px 30px;
+  border-top: 1px solid rgba(127,255,212,0.25);
+  box-shadow: inset 0 18px 45px rgba(0,0,0,0.85);
+  text-align: center;
+}
+
+.manada h3 {
+  color: #7fffd4;
+  letter-spacing: 3px;
+  font-size: 1.7rem;
+  margin-bottom: 28px;
+  text-transform: uppercase;
 }
 
 /* ─────────── FOOTER ─────────── */
@@ -185,7 +210,9 @@ footer {
 
 <div class="wrapper">
 
-  <div class="side reveal"><div class="side-content">Vigilia · Instinto · Silencio</div></div>
+  <div class="side reveal">
+    <div class="side-content">Vigilia · Instinto · Silencio</div>
+  </div>
 
   <div class="card">
 
@@ -198,14 +225,28 @@ footer {
       <h2>El Lobo Salvaje</h2>
 
       <p id="manifesto">
-        <span><strong>Nacido del silencio y la sombra.</strong></span><br>
-        <span>Sin miedo. Sin cadenas.</span><br><br>
-        <span>La fuerza no es individual.</span><br>
-        <span><strong>Es colectiva.</strong></span><br><br>
-        <span>La manada avanza.</span>
-      </p>
+        <span><strong>Nacido del silencio y la sombra,</strong> bajo la misma luna y la misma tierra.</span><br>
+        <span>Sus ojos no buscan temor, sino el amor.</span><br><br>
 
-      <div class="join" id="joinBtn">Únete a la manada</div>
+        <span>Ahyron no obedece fronteras ni voces ajenas.</span><br>
+        <span>Mira la noche sin temor, atento a un mundo que no se deja dominar.</span><br><br>
+
+        <span>No ataca por impulso, sino por instinto.</span><br>
+        <span>No actúa por seguir al rebaño, sino por convicción.</span><br>
+        <span><strong>Su fuerza no es individual: es colectiva.</strong></span><br><br>
+
+        <span>Vigila, protege y pertenece.</span><br>
+        <span class="final"><strong>La manada.</strong></span>
+      </p>
+    </div>
+
+    <div class="manada">
+      <h3>La Manada</h3>
+      <p>
+        La manada no se forma por número, sino por lealtad.<br>
+        La manada no sigue.<br>
+        <strong>Avanza.</strong>
+      </p>
     </div>
 
     <footer>
@@ -215,44 +256,53 @@ footer {
 
   </div>
 
-  <div class="side reveal"><div class="side-content">Manada · Lealtad · Noche</div></div>
+  <div class="side reveal">
+    <div class="side-content">Manada · Lealtad · Noche</div>
+  </div>
 
 </div>
 
 <script>
-/* Reveal */
-const obs = new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add("visible")),{threshold:.2});
-document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+/* ─────────── LATERALES ─────────── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add("visible");
+  });
+}, { threshold: 0.2 });
 
-/* Texto ritual */
-document.querySelectorAll("#manifesto span").forEach((l,i)=>{
-  setTimeout(()=>l.classList.add("visible"),600+i*300);
-});
+document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 
-/* Día / Noche */
-const h=new Date().getHours();
-if(h>=7&&h<19)document.body.classList.add("light");
+/* ─────────── AUDIO ─────────── */
+const audio = document.getElementById("ambientSound");
+let audioStarted = false;
 
-/* Audio */
-const audio=document.getElementById("ambientSound");
-document.addEventListener("click",()=>{audio.volume=.25;audio.play().catch(()=>{});},{once:true});
-
-/* Contador */
-let v=+localStorage.getItem("ahyron_visits")||0;
-localStorage.setItem("ahyron_visits",++v);
-document.getElementById("stats").textContent=`Visitante nº ${v}`;
-
-/* Easter egg */
-document.addEventListener("keydown",e=>{
-  if(e.key==="l"){
-    alert("🐺 El lobo reconoce a los suyos.");
+document.addEventListener("click", () => {
+  if (!audioStarted) {
+    audio.volume = 0.25;
+    audio.play().catch(()=>{});
+    audioStarted = true;
   }
+}, { once: true });
+
+/* ─────────── TEXTO SINCRONIZADO ─────────── */
+document.querySelectorAll("#manifesto span").forEach((line, i) => {
+  const baseDelay = audioStarted ? 700 : 500;
+  setTimeout(() => {
+    line.classList.add("visible");
+  }, baseDelay + i * 420);
 });
 
-/* CTA */
-document.getElementById("joinBtn").onclick=()=>{
-  alert("🐾 La manada te ha visto.");
-};
+/* ─────────── MODO DÍA / NOCHE ─────────── */
+const hour = new Date().getHours();
+if (hour >= 7 && hour < 19) {
+  document.body.classList.add("light");
+}
+
+/* ─────────── CONTADOR ─────────── */
+let visits = Number(localStorage.getItem("ahyron_visits")) || 0;
+visits++;
+localStorage.setItem("ahyron_visits", visits);
+document.getElementById("stats").textContent = `Visitante nº ${visits}`;
 </script>
 
 </body>
