@@ -20,13 +20,38 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            transition: background 1.2s ease, color 1.2s ease;
+            transition: background 1.2s ease, color 1.2s ease, filter 0.8s ease; /* Transición para la visión de lobo */
             overflow-x: hidden;
+            position: relative; /* Para las huellas */
         }
 
         body.light {
             background: radial-gradient(circle at top, #ffffff, #e0e7e7);
             color: #1a1a1a;
+        }
+
+        /* FILTRO DE VISIÓN DE LOBO */
+        body.wolf-vision {
+            filter: grayscale(100%) contrast(200%) brightness(80%) hue-rotate(200deg) saturate(300%);
+            background: #0d001a !important; /* Fondo más oscuro para el efecto */
+        }
+        body.wolf-vision .card {
+            box-shadow: 0 0 50px rgba(0,255,255,0.7) !important;
+        }
+        body.wolf-vision .side-content {
+            color: cyan !important;
+        }
+        body.wolf-vision h2, body.wolf-vision strong {
+            color: cyan !important;
+            text-shadow: 0 0 10px rgba(0,255,255,0.8) !important;
+        }
+        body.wolf-vision .manada {
+            background: rgba(0,255,255,0.1) !important;
+            border-top-color: rgba(0,255,255,0.3) !important;
+        }
+        body.wolf-vision .fog {
+            opacity: 0.3 !important;
+            filter: blur(1px);
         }
 
         .wrapper {
@@ -49,6 +74,18 @@
         @keyframes drift {
             from { background-position: 0 0; }
             to { background-position: 2000px 1000px; }
+        }
+
+        /* ─────────── PARTICULAS ─────────── */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.7;
         }
 
         /* ─────────── LATERALES ─────────── */
@@ -106,6 +143,7 @@
             overflow: hidden;
             height: 500px;
             position: relative;
+            cursor: pointer; /* Para el aullido */
         }
 
         .image-container img {
@@ -130,6 +168,7 @@
             margin: 0;
             animation: breath 6s ease-in-out infinite;
             text-transform: uppercase;
+            cursor: pointer; /* Para el aullido */
         }
 
         @keyframes breath {
@@ -192,6 +231,7 @@
             50% { transform: scale(1.05); opacity: 1; }
         }
 
+        /* ─────────── MANADA ─────────── */
         .manada {
             margin-top: 40px;
             padding: 60px 30px;
@@ -208,21 +248,138 @@
             text-align: center;
         }
 
+        /* ─────────── BOTÓN DE VISIÓN DE LOBO ─────────── */
+        #wolfVisionToggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(127,255,212,0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(127,255,212,0.6);
+            z-index: 100;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0.8;
+            border: none;
+            outline: none;
+        }
+        #wolfVisionToggle:hover {
+            background-color: #7fffd4;
+            box-shadow: 0 0 20px rgba(127,255,212,0.9);
+            opacity: 1;
+        }
+        #wolfVisionToggle svg {
+            width: 60%;
+            height: 60%;
+            fill: #000;
+            transition: fill 0.3s ease;
+        }
+        body.wolf-vision #wolfVisionToggle {
+            background-color: rgba(0,255,255,0.9);
+            box-shadow: 0 0 20px rgba(0,255,255,0.9);
+        }
+        body.wolf-vision #wolfVisionToggle svg {
+            fill: #fff;
+        }
+
+        /* ─────────── ANIMACIÓN DE RASGUÑO ─────────── */
+        #scratchAnimation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease-out;
+            pointer-events: none;
+            opacity: 1;
+        }
+        #scratchAnimation.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #scratchSVG {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #333; /* Color de las garras */
+            stroke-width: 5px;
+            stroke-linecap: round;
+            stroke-dasharray: 1000; /* Lo suficientemente largo */
+            stroke-dashoffset: 1000;
+        }
+
+        #scratchSVG.animate {
+            animation: scratchLine 1s ease-in-out forwards;
+        }
+
+        @keyframes scratchLine {
+            to {
+                stroke-dashoffset: 0;
+                opacity: 0; /* Las garras se desvanecen */
+            }
+        }
+
+        /* ─────────── HUELLAS DE LOBO AL SCROLL ─────────── */
+        .paw-print {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            opacity: 0;
+            transition: opacity 0.5s ease-out, transform 0.5s ease;
+            transform: scale(0.8);
+            pointer-events: none;
+            z-index: 2; /* Sobre la niebla, debajo de la card */
+        }
+        .paw-print.visible {
+            opacity: 0.3; /* Transparencia de las huellas */
+            transform: scale(1);
+        }
+        body.wolf-vision .paw-print.visible {
+            opacity: 0.6;
+            filter: drop-shadow(0 0 5px cyan);
+        }
+
+        /* ─────────── RESPONSIVE ─────────── */
         @media(max-width:900px){
             .wrapper { grid-template-columns: 1fr; }
             .side { display:none; }
             h1 { font-size: 2.5rem; }
             .image-container { height: 350px; }
+            #wolfVisionToggle { bottom: 15px; right: 15px; width: 40px; height: 40px; }
+            .paw-print { width: 30px; height: 30px; }
         }
     </style>
 </head>
 
 <body>
 
+<div id="scratchAnimation">
+    <svg id="scratchSVG" viewbox="0 0 100 100" preserveAspectRatio="none">
+        <path d="M10 20 Q30 5 50 20 M20 30 Q40 15 60 30" class="scratch-path" />
+        <path d="M30 50 Q50 35 70 50 M40 60 Q60 45 80 60" class="scratch-path" />
+        <path d="M50 80 Q70 65 90 80 M60 90 Q80 75 100 90" class="scratch-path" />
+    </svg>
+</div>
+
+<canvas id="particles"></canvas>
 <div class="fog"></div>
 
 <audio id="ambientSound" loop>
     <source src="ambient-wolf-wind.mp3" type="audio/mpeg">
+</audio>
+<audio id="howlSound">
+    <source src="wolf-howl.mp3" type="audio/mpeg">
 </audio>
 
 <div class="wrapper">
@@ -236,7 +393,7 @@
         </div>
 
         <div class="content">
-            <h1>Ahyron</h1>
+            <h1 id="ahyronTitle">Ahyron</h1>
             <h2>El Lobo Salvaje</h2>
 
             <p id="manifesto">
@@ -275,8 +432,34 @@
     </aside>
 </div>
 
+<button id="wolfVisionToggle" aria-label="Activar visión de lobo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.5 92.9-131.3c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-92.9-131.3C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64s-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64z"/></svg>
+</button>
+
+<img src="paw.svg" class="paw-print" style="left: 10%; top: 600px; transform: rotate(-20deg);" alt="huella">
+<img src="paw.svg" class="paw-print" style="left: 80%; top: 900px; transform: rotate(15deg);" alt="huella">
+<img src="paw.svg" class="paw-print" style="left: 20%; top: 1250px; transform: rotate(5deg);" alt="huella">
+<img src="paw.svg" class="paw-print" style="left: 70%; top: 1550px; transform: rotate(-10deg);" alt="huella">
+<img src="paw.svg" class="paw-print" style="left: 30%; top: 1900px; transform: rotate(25deg);" alt="huella">
+
 <script>
-    /* 1. PARALAJE DE IMAGEN */
+    /* -------------------------------------- */
+    /* 1. ANIMACIÓN DE RASGUÑO INICIAL */
+    /* -------------------------------------- */
+    const scratchAnimation = document.getElementById('scratchAnimation');
+    const scratchSVG = document.getElementById('scratchSVG');
+    
+    // Anima el SVG y luego oculta la capa
+    function startScratchAnimation() {
+        scratchSVG.classList.add('animate');
+        setTimeout(() => {
+            scratchAnimation.classList.add('hidden');
+        }, 1500); // Duración de la animación del rasguño
+    }
+
+    /* -------------------------------------- */
+    /* 2. EFECTO PARALAJE DE IMAGEN */
+    /* -------------------------------------- */
     const heroImg = document.getElementById('heroImage');
     document.addEventListener('mousemove', (e) => {
         const x = (window.innerWidth / 2 - e.pageX) / 60;
@@ -284,38 +467,140 @@
         heroImg.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
     });
 
-    /* 2. REVELADO AL CARGAR (AUTOMÁTICO) */
+    /* -------------------------------------- */
+    /* 3. PARTICULAS FLOTANTES (ESTRELLAS/NIEVE) */
+    /* -------------------------------------- */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let dots = [];
+
+    function initParticles() {
+        canvas.width = window.innerWidth;
+        canvas.height = document.documentElement.scrollHeight; // Cubre todo el scroll
+        dots = [];
+        const numParticles = Math.floor(window.innerWidth / 15); // Más partículas en pantallas grandes
+        for (let i = 0; i < numParticles; i++) {
+            dots.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5 + 0.5,
+                speedY: Math.random() * 0.4 + 0.1,
+                opacity: Math.random() * 0.6 + 0.2
+            });
+        }
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        dots.forEach(dot => {
+            ctx.fillStyle = `rgba(127, 255, 212, ${dot.opacity})`;
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            dot.y -= dot.speedY; // Mueve hacia arriba
+            if (dot.y < 0) dot.y = canvas.height; // Reinicia desde abajo
+        });
+        requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', initParticles);
+    // Asegura que las partículas se redibujen cuando se hace scroll para mantener la perspectiva
+    window.addEventListener('scroll', () => {
+        canvas.style.transform = `translateY(${window.scrollY}px)`;
+    });
+    initParticles();
+    drawParticles();
+
+    /* -------------------------------------- */
+    /* 4. REVELADO AL CARGAR (AUTOMÁTICO) */
+    /* -------------------------------------- */
     window.addEventListener('DOMContentLoaded', () => {
-        // Revelar laterales después de un momento
+        startScratchAnimation(); // Inicia el rasguño primero
+
+        // Revelar laterales y tarjeta principal después de que el rasguño empiece a desaparecer
         setTimeout(() => {
             document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
-        }, 300);
+            document.querySelector(".card").style.animation = 'enter 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+        }, 1000); // Empieza a revelarse a la mitad de la animación del rasguño
 
         // Secuencia de texto automática
         const manifestoSpans = document.querySelectorAll("#manifesto span");
         manifestoSpans.forEach((line, i) => {
             setTimeout(() => {
                 line.classList.add("visible");
-            }, 800 + (i * 500)); 
+            }, 2000 + (i * 500)); // Empieza más tarde para dejar ver el fondo
         });
     });
 
-    /* 3. ACTIVACIÓN DE AUDIO POR INTERACCIÓN */
-    document.addEventListener("click", () => {
-        const audio = document.getElementById("ambientSound");
-        if (audio.paused) {
-            audio.volume = 0.2;
-            audio.play().catch(() => {});
-        }
-    }, { once: true });
+    /* -------------------------------------- */
+    /* 5. ACTIVACIÓN DE AUDIO POR INTERACCIÓN */
+    /* -------------------------------------- */
+    const ambientSound = document.getElementById("ambientSound");
+    const howlSound = document.getElementById("howlSound");
 
-    /* 4. CONFIGURACIÓN HORARIA */
+    document.addEventListener("click", () => {
+        if (ambientSound.paused) {
+            ambientSound.volume = 0.2;
+            ambientSound.play().catch(() => {});
+        }
+    }, { once: true }); // Solo necesita un clic para desbloquear el audio del navegador
+
+    /* -------------------------------------- */
+    /* 6. AULLIDO AL PASAR EL RATÓN */
+    /* -------------------------------------- */
+    const ahyronTitle = document.getElementById('ahyronTitle');
+    const heroImage = document.getElementById('heroImage');
+    let howlTimeout;
+
+    const playHowl = () => {
+        clearTimeout(howlTimeout); // Cancela aullidos previos para evitar superposición
+        if (!howlSound.paused) {
+            howlSound.pause();
+            howlSound.currentTime = 0;
+        }
+        howlSound.volume = 0.4;
+        howlSound.play().catch(() => {});
+    };
+
+    ahyronTitle.addEventListener('mouseenter', playHowl);
+    heroImage.addEventListener('mouseenter', playHowl);
+
+    /* -------------------------------------- */
+    /* 7. MODO DÍA / NOCHE AUTOMÁTICO */
+    /* -------------------------------------- */
     const hour = new Date().getHours();
     if (hour >= 7 && hour < 19) {
         document.body.classList.add("light");
     }
 
-    /* 5. CONTADOR DE VISITAS LOCAL */
+    /* -------------------------------------- */
+    /* 8. BOTÓN DE VISIÓN DE LOBO */
+    /* -------------------------------------- */
+    const wolfVisionToggle = document.getElementById('wolfVisionToggle');
+    wolfVisionToggle.addEventListener('click', () => {
+        document.body.classList.toggle('wolf-vision');
+    });
+
+    /* -------------------------------------- */
+    /* 9. HUELLAS AL SCROLL */
+    /* -------------------------------------- */
+    const pawPrints = document.querySelectorAll('.paw-print');
+    window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY + window.innerHeight;
+
+        pawPrints.forEach(paw => {
+            if (scrollPosition > paw.offsetTop + 50) { // +50 para que aparezca un poco antes
+                paw.classList.add('visible');
+            } else {
+                paw.classList.remove('visible');
+            }
+        });
+    });
+
+    /* -------------------------------------- */
+    /* 10. CONTADOR DE VISITAS LOCAL */
+    /* -------------------------------------- */
     let visits = Number(localStorage.getItem("ahyron_visits")) || 0;
     visits++;
     localStorage.setItem("ahyron_visits", visits);
