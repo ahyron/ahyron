@@ -302,8 +302,9 @@
 <div class="fog"></div>
 
 <audio id="ambientSound" loop>
-    <source src="TU_CANCION_AQUI.mp3" type="audio/mpeg">
+    <source src="sia-bird.mp3" type="audio/mpeg">
 </audio>
+
 <audio id="howlSound">
     <source src="wolf-howl.mp3" type="audio/mpeg">
 </audio>
@@ -464,10 +465,11 @@
     const ambient = document.getElementById("ambientSound");
     const howl = document.getElementById("howlSound");
 
+    // La música empezará al hacer clic en cualquier lugar de la web
     document.addEventListener("click", () => {
         if (ambient.paused) {
-            ambient.volume = 0.3;
-            ambient.play().catch(e => console.log("Audio bloqueado"));
+            ambient.volume = 0.4; // Ajustado el volumen de Sia al 40%
+            ambient.play().catch(e => console.log("Audio bloqueado por el navegador"));
         }
     }, { once: true });
 
