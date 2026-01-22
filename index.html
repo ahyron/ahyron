@@ -22,7 +22,7 @@
             position: relative;
         }
 
-        /* VISIÓN DE LOBO */
+        /* VISIÓN DE LOBO MEJORADA */
         body.wolf-vision {
             filter: grayscale(100%) contrast(150%) brightness(80%);
         }
@@ -67,35 +67,33 @@
         .image-container {
             height: 500px;
             overflow: hidden;
-            position: relative;
         }
 
         .image-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.3s ease;
         }
 
         .content { padding: 60px 40px; text-align: center; }
 
-        /* EFECTO DE VIBRACIÓN */
+        /* EFECTO DE VIBRACIÓN CON LA MÚSICA */
         h1 {
             font-size: 4rem;
             letter-spacing: 8px;
             margin: 0;
             text-transform: uppercase;
             color: #fff;
-            transition: text-shadow 0.3s ease;
         }
 
         .music-pulse {
-            animation: pulse-audio 1.5s infinite ease-in-out;
+            animation: pulse-audio 2s infinite ease-in-out;
         }
 
         @keyframes pulse-audio {
-            0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(127, 255, 212, 0.2); }
-            50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(127, 255, 212, 0.7); }
+            0%, 100% { transform: scale(1); text-shadow: 0 0 0px transparent; }
+            50% { transform: scale(1.02); text-shadow: 0 0 20px rgba(127, 255, 212, 0.5); }
         }
 
         h2 { color: #7fffd4; font-weight: 300; letter-spacing: 3px; }
@@ -109,33 +107,20 @@
 
         #manifesto span.visible { opacity: 1; }
 
-        /* BOTONES FLOTANTES */
-        .controls {
+        /* BOTÓN FLOTANTE */
+        #wolfVisionToggle {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 10000;
-        }
-
-        .btn-float {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             background: #7fffd4;
             border: none;
             cursor: pointer;
-            font-size: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 20px rgba(127, 255, 212, 0.4);
-            transition: transform 0.2s;
+            z-index: 10000;
+            box-shadow: 0 0 20px rgba(127, 255, 212, 0.5);
         }
-
-        .btn-float:hover { transform: scale(1.1); }
 
         /* HUELLAS */
         .paw-print {
@@ -144,7 +129,6 @@
             opacity: 0;
             transition: 1s ease;
             z-index: 3;
-            font-size: 30px;
         }
 
         .paw-print.visible { opacity: 0.3; }
@@ -183,7 +167,11 @@
 <canvas id="particles"></canvas>
 
 <audio id="bgMusic" loop>
-    <source src="sia-bird.mp3" type="audio/mpeg">
+    <source src="musica-lobo.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="howlSound">
+    <source src="wolf-howl.mp3" type="audio/mpeg">
 </audio>
 
 <div class="wrapper">
@@ -205,40 +193,22 @@
     <aside></aside>
 </div>
 
-<div class="controls">
-    <button id="musicToggle" class="btn-float">🎵</button>
-    <button id="wolfVisionToggle" class="btn-float">👁️</button>
-</div>
+<button id="wolfVisionToggle">👁️</button>
 
-<div class="paw-print" style="top: 800px; left: 15%;">🐾</div>
-<div class="paw-print" style="top: 1100px; right: 15%;">🐾</div>
-<div class="paw-print" style="top: 1400px; left: 20%;">🐾</div>
+<div class="paw-print" style="top: 800px; left: 10%;">🐾</div>
+<div class="paw-print" style="top: 1100px; right: 10%;">🐾</div>
 
 <script>
     const music = document.getElementById('bgMusic');
     const title = document.getElementById('ahyronTitle');
-    const musicBtn = document.getElementById('musicToggle');
-    const heroImage = document.getElementById('heroImage');
 
-    // 1. CONTROL DE MÚSICA (Sia - Bird Set Free)
-    function togglePlay() {
+    // 1. ACTIVAR MÚSICA AL PRIMER CLIC
+    document.addEventListener('click', () => {
         if (music.paused) {
             music.volume = 0.4;
             music.play();
-            title.classList.add('music-pulse');
-            musicBtn.innerText = '⏸️';
-        } else {
-            music.pause();
-            title.classList.remove('music-pulse');
-            musicBtn.innerText = '🎵';
+            title.classList.add('music-pulse'); // Empieza a vibrar con la música
         }
-    }
-
-    musicBtn.addEventListener('click', togglePlay);
-
-    // Activar al primer clic en cualquier parte de la web
-    document.addEventListener('click', () => {
-        if (music.paused) togglePlay();
     }, { once: true });
 
     // 2. ANIMACIÓN DE ENTRADA
@@ -248,29 +218,22 @@
         
         setTimeout(() => {
             document.getElementById('scratchOverlay').style.opacity = '0';
-            const mainCard = document.getElementById('mainCard');
-            mainCard.style.opacity = '1';
-            mainCard.style.transform = 'translateY(0)';
+            document.getElementById('mainCard').style.opacity = '1';
+            document.getElementById('mainCard').style.transform = 'translateY(0)';
             
+            // Revelar texto
             const spans = document.querySelectorAll('#manifesto span');
             spans.forEach((s, i) => {
-                setTimeout(() => s.classList.add('visible'), i * 800);
+                setTimeout(() => s.classList.add('visible'), i * 600);
             });
         }, 1000);
     });
 
-    // 3. EFECTO PARALLAX EN LA IMAGEN
-    document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 40;
-        const y = (window.innerHeight / 2 - e.pageY) / 40;
-        heroImage.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
-    });
-
-    // 4. SISTEMA DE PARTÍCULAS
+    // 3. PARTICULAS QUE HUYEN DEL RATÓN
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const mouse = { x: null, y: null, radius: 120 };
+    const mouse = { x: null, y: null, radius: 100 };
 
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.x;
@@ -279,18 +242,15 @@
 
     class Particle {
         constructor() {
-            this.init();
-        }
-        init() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
+            this.x = Math.random() * window.innerWidth;
+            this.y = Math.random() * window.innerHeight;
             this.baseX = this.x;
             this.baseY = this.y;
-            this.size = Math.random() * 2 + 1;
-            this.density = (Math.random() * 20) + 1;
+            this.size = 2;
+            this.density = (Math.random() * 30) + 1;
         }
         draw() {
-            ctx.fillStyle = 'rgba(127, 255, 212, 0.4)';
+            ctx.fillStyle = 'rgba(127, 255, 212, 0.5)';
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
@@ -300,8 +260,8 @@
             let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx*dx + dy*dy);
             if (distance < mouse.radius) {
-                this.x -= dx/15;
-                this.y -= dy/15;
+                this.x -= dx/10;
+                this.y -= dy/10;
             } else {
                 this.x += (this.baseX - this.x) * 0.05;
                 this.y += (this.baseY - this.y) * 0.05;
@@ -313,7 +273,7 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         particles = [];
-        for (let i = 0; i < 120; i++) particles.push(new Particle());
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
     }
 
     function animate() {
@@ -322,19 +282,18 @@
         requestAnimationFrame(animate);
     }
 
-    window.addEventListener('resize', initParticles);
     initParticles();
     animate();
 
-    // 5. VISIÓN DE LOBO
+    // 4. VISIÓN DE LOBO
     document.getElementById('wolfVisionToggle').addEventListener('click', () => {
         document.body.classList.toggle('wolf-vision');
     });
 
-    // 6. APARECER HUELLAS AL HACER SCROLL
+    // 5. APARECER HUELLAS AL HACER SCROLL
     window.addEventListener('scroll', () => {
         document.querySelectorAll('.paw-print').forEach(p => {
-            if (window.scrollY + window.innerHeight > p.offsetTop + 50) {
+            if (window.scrollY + window.innerHeight > p.offsetTop) {
                 p.classList.add('visible');
             }
         });
