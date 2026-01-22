@@ -10,7 +10,13 @@
 
     <style>
         /* ─────────── BASE ─────────── */
-        * { box-sizing: border-box; }
+        :root {
+            --glow-color: #7fffd4;
+            --wolf-blue: #00ffff;
+        }
+
+        /* IDEA 2: Cursor de Bruma - Ocultamos el puntero original */
+        * { box-sizing: border-box; cursor: none !important; }
 
         body {
             margin: 0;
@@ -25,119 +31,40 @@
             position: relative;
         }
 
-        body.light {
-            background: radial-gradient(circle at top, #ffffff, #e0e7e7);
-            color: #1a1a1a;
-        }
-
-        /* FILTRO DE VISIÓN DE LOBO + VIÑETA */
-        body.wolf-vision {
-            filter: grayscale(100%) contrast(150%) brightness(90%);
-            background: #000a0a !important;
-        }
-
-        body.wolf-vision::after {
-            content: "";
+        /* IDEA 1: Partículas de estela (Bruma) */
+        .trail {
             position: fixed;
-            inset: 0;
-            background: radial-gradient(circle, transparent 30%, rgba(0, 255, 255, 0.15) 100%);
+            width: 10px;
+            height: 10px;
+            background: var(--glow-color);
+            border-radius: 50%;
             pointer-events: none;
-            z-index: 9999;
-            animation: pulse-vignette 4s infinite alternate;
-        }
-
-        @keyframes pulse-vignette {
-            from { opacity: 0.4; } to { opacity: 0.8; }
-        }
-
-        body.wolf-vision .card { box-shadow: 0 0 50px rgba(0,255,255,0.4) !important; }
-        body.wolf-vision h2, body.wolf-vision strong {
-            color: cyan !important;
-            text-shadow: 0 0 15px rgba(0,255,255,0.8) !important;
-        }
-
-        .wrapper {
-            display: grid;
-            grid-template-columns: 1fr minmax(320px, 950px) 1fr;
-            width: 100%;
-        }
-
-        /* ─────────── NIEBLA ─────────── */
-        .fog {
-            position: fixed;
-            inset: 0;
-            background: url("https://www.transparenttextures.com/patterns/foggy-birds.png");
-            opacity: 0.12;
-            animation: drift 120s linear infinite;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes drift {
-            from { background-position: 0 0; }
-            to { background-position: 2000px 1000px; }
-        }
-
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* ─────────── LATERALES ─────────── */
-        .side {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 99999;
+            filter: blur(4px);
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            z-index: 3;
+            transition: transform 0.1s linear;
         }
 
-        .side.visible { opacity: 1; transform: translateY(0); }
-
-        .side-content {
-            writing-mode: vertical-rl;
-            letter-spacing: 6px;
-            color: rgba(127, 255, 212, 0.4);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: bold;
+        /* IDEA 3: Luna Interactiva (Esquina superior) */
+        #moon-phase {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 45px;
+            height: 45px;
+            background: #fdfdfd;
+            border-radius: 50%;
+            box-shadow: 0 0 25px #fff, inset -5px -2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #moon-phase.new-moon {
+            background: #111;
+            box-shadow: 0 0 15px var(--glow-color);
+            transform: scale(0.9) rotate(180deg);
         }
 
-        /* ─────────── CARD ─────────── */
-        .card {
-            background: linear-gradient(180deg, rgba(0,0,0,0.95), rgba(5,15,20,0.98));
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            margin: 60px 0;
-            opacity: 0;
-            transform: scale(0.98) translateY(30px);
-            z-index: 4;
-            border: 1px solid rgba(127, 255, 212, 0.05);
-        }
-
-        body.light .card {
-            background: #ffffff;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        /* ─────────── IMAGEN ─────────── */
-        .image-container {
-            overflow: hidden;
-            height: 500px;
-            position: relative;
-            cursor: pointer;
-        }
-
+        /* IDEA 4: Efecto Latido en la Imagen */
         .image-container img {
             width: 100%;
             height: 115%;
@@ -146,151 +73,120 @@
             filter: contrast(110%) saturate(110%);
             transition: transform 0.2s ease-out;
             will-change: transform;
+            /* El latido */
+            animation: wolf-heartbeat 4s ease-in-out infinite;
         }
 
-        /* ─────────── CONTENIDO ─────────── */
-        .content { padding: 60px 40px; text-align: center; }
-
-        h1 {
-            font-size: 3.5rem;
-            letter-spacing: 5px;
-            margin: 0;
-            animation: breath 6s ease-in-out infinite;
-            text-transform: uppercase;
-            cursor: pointer;
+        @keyframes wolf-heartbeat {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.04); filter: brightness(1.15) contrast(1.2); }
         }
 
-        @keyframes breath {
-            0%, 100% { letter-spacing: 5px; opacity: 0.9; }
-            50% { letter-spacing: 8px; opacity: 1; }
-        }
-
-        h2 {
-            font-weight: 300;
-            color: #7fffd4;
-            margin-bottom: 40px;
-            letter-spacing: 2px;
-        }
-
-        body.light h2 { color: #008b8b; }
-
-        p {
-            max-width: 60ch;
-            margin: auto;
-            line-height: 1.9;
-            font-size: 1.05rem;
-        }
-
+        /* IDEA 5: Palabras Vivas - Efecto hover en palabras clave */
         strong {
+            display: inline-block;
             color: #aef3e6;
             text-shadow: 0 0 8px rgba(127,255,212,0.3);
             animation: glow 4.5s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        strong:hover {
+            transform: translateY(-3px) scale(1.1);
+            text-shadow: 0 0 20px var(--wolf-blue);
+            color: #fff;
         }
 
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 5px rgba(127,255,212,0.3); }
-            50% { text-shadow: 0 0 15px rgba(127,255,212,0.7); }
+        /* ESTILOS ORIGINALES CONTINUACIÓN */
+        body.light { background: radial-gradient(circle at top, #ffffff, #e0e7e7); color: #1a1a1a; }
+        
+        body.wolf-vision {
+            filter: grayscale(100%) contrast(150%) brightness(90%);
+            background: #000a0a !important;
         }
 
-        #manifesto span {
-            opacity: 0;
-            display: inline-block;
-            transform: translateY(15px);
-            transition: all 1s ease;
+        body.wolf-vision::after {
+            content: ""; position: fixed; inset: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0, 255, 255, 0.15) 100%);
+            pointer-events: none; z-index: 9999;
+            animation: pulse-vignette 4s infinite alternate;
         }
 
+        @keyframes pulse-vignette { from { opacity: 0.4; } to { opacity: 0.8; } }
+
+        .wrapper { display: grid; grid-template-columns: 1fr minmax(320px, 950px) 1fr; width: 100%; }
+
+        .fog {
+            position: fixed; inset: 0;
+            background: url("https://www.transparenttextures.com/patterns/foggy-birds.png");
+            opacity: 0.12; animation: drift 120s linear infinite; pointer-events: none; z-index: 1;
+        }
+
+        @keyframes drift { from { background-position: 0 0; } to { background-position: 2000px 1000px; } }
+
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+        .side { display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(40px); transition: all 1.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative; z-index: 3; }
+        .side.visible { opacity: 1; transform: translateY(0); }
+        .side-content { writing-mode: vertical-rl; letter-spacing: 6px; color: rgba(127, 255, 212, 0.4); text-transform: uppercase; font-size: 0.75rem; font-weight: bold; }
+
+        .card {
+            background: linear-gradient(180deg, rgba(0,0,0,0.95), rgba(5,15,20,0.98));
+            border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            margin: 60px 0; opacity: 0; transform: scale(0.98) translateY(30px);
+            z-index: 4; border: 1px solid rgba(127, 255, 212, 0.05);
+            /* Parallax sutil al hacer scroll */
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
+        }
+
+        .image-container { overflow: hidden; height: 500px; position: relative; }
+
+        .content { padding: 60px 40px; text-align: center; }
+
+        h1 { font-size: 3.5rem; letter-spacing: 5px; margin: 0; animation: breath 6s ease-in-out infinite; text-transform: uppercase; }
+
+        @keyframes breath { 0%, 100% { letter-spacing: 5px; opacity: 0.9; } 50% { letter-spacing: 8px; opacity: 1; } }
+
+        h2 { font-weight: 300; color: #7fffd4; margin-bottom: 40px; letter-spacing: 2px; }
+
+        #manifesto span { opacity: 0; display: inline-block; transform: translateY(15px); transition: all 1s ease; }
         #manifesto span.visible { opacity: 1; transform: translateY(0); }
 
-        .final {
-            margin-top: 20px;
-            font-size: 1.4rem;
-            display: block;
-            letter-spacing: 4px;
-            animation: pulse 3.5s ease-in-out infinite;
-        }
+        .final { margin-top: 20px; font-size: 1.4rem; display: block; letter-spacing: 4px; animation: pulse 3.5s ease-in-out infinite; }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
 
-        /* ─────────── MANADA ─────────── */
-        .manada {
-            margin-top: 40px;
-            padding: 60px 30px;
-            background: rgba(0,0,0,0.2);
-            border-top: 1px solid rgba(127,255,212,0.1);
-        }
+        .manada { margin-top: 40px; padding: 60px 30px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(127,255,212,0.1); }
 
         footer { padding: 40px; font-size: 0.85rem; color: #88aaaa; text-align: center; }
 
-        /* ─────────── CONTROLES ─────────── */
         #wolfVisionToggle {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 50px;
-            height: 50px;
-            background-color: rgba(127,255,212,0.8);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(127,255,212,0.6);
-            z-index: 10000;
-            border: none;
+            position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px;
+            background-color: rgba(127, 255, 212, 0.8); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 15px rgba(127,255,212,0.6); z-index: 10000; border: none;
         }
 
         #scratchAnimation {
-            position: fixed;
-            inset: 0;
-            background-color: #000;
-            z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1.5s ease-out;
-            pointer-events: none;
+            position: fixed; inset: 0; background-color: #000; z-index: 99999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1.5s ease-out; pointer-events: none;
         }
-
         #scratchAnimation.hidden { opacity: 0; visibility: hidden; }
 
-        #scratchSVG {
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke: #1a1a1a;
-            stroke-width: 2;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-        }
-
+        #scratchSVG { width: 100%; height: 100%; fill: none; stroke: #1a1a1a; stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
         #scratchSVG.animate { animation: scratchLine 1.2s ease-in-out forwards; }
-
         @keyframes scratchLine { to { stroke-dashoffset: 0; opacity: 0; } }
 
-        .paw-print {
-            position: absolute;
-            width: 40px;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            pointer-events: none;
-            z-index: 2;
-        }
-
+        .paw-print { position: absolute; width: 40px; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; z-index: 2; }
         .paw-print.visible { opacity: 0.25; }
-        body.wolf-vision .paw-print.visible { opacity: 0.6; filter: drop-shadow(0 0 5px cyan); }
 
-        @media(max-width:900px){
-            .wrapper { grid-template-columns: 1fr; }
-            .side { display:none; }
-            h1 { font-size: 2.5rem; }
-        }
+        @media(max-width:900px){ .wrapper { grid-template-columns: 1fr; } .side { display:none; } h1 { font-size: 2.5rem; } }
     </style>
 </head>
 
 <body>
+
+<div id="moon-phase" title="Ciclo Lunar"></div>
 
 <div id="scratchAnimation">
     <svg id="scratchSVG" viewbox="0 0 100 100" preserveAspectRatio="none">
@@ -368,16 +264,51 @@
 <img src="paw.svg" class="paw-print" style="left: 10%; top: 1400px; transform: rotate(5deg);">
 
 <script>
-    /* 1. PARTICULAS INTERACTIVAS */
+    /* 1. CURSOR DE BRUMA (Partículas Trail) */
+    const dots = [];
+    const mousePos = { x: 0, y: 0 };
+    for (let i = 0; i < 15; i++) {
+        const d = document.createElement("div");
+        d.className = "trail";
+        document.body.appendChild(d);
+        dots.push(d);
+    }
+    window.addEventListener("mousemove", e => {
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+    });
+    function updateTrail() {
+        let x = mousePos.x;
+        let y = mousePos.y;
+        dots.forEach((dot, index) => {
+            const nextDot = dots[index + 1] || dots[0];
+            dot.style.left = x + "px";
+            dot.style.top = y + "px";
+            dot.style.opacity = 1 - (index / dots.length);
+            dot.style.transform = `scale(${1 - (index / dots.length)})`;
+            x += (nextDot.offsetLeft - x) * 0.4;
+            y += (nextDot.offsetTop - y) * 0.4;
+        });
+        requestAnimationFrame(updateTrail);
+    }
+    updateTrail();
+
+    /* 2. LUNA INTERACTIVA */
+    const moon = document.getElementById('moon-phase');
+    moon.addEventListener('click', () => {
+        moon.classList.toggle('new-moon');
+        document.body.style.background = moon.classList.contains('new-moon') 
+            ? "#050505" 
+            : "radial-gradient(circle at top, #000000, #050d12, #000000)";
+    });
+
+    /* 3. PARTICULAS INTERACTIVAS (Original optimizado) */
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particles = [];
     const mouse = { x: null, y: null, radius: 100 };
 
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.x;
-        mouse.y = e.y;
-    });
+    window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
 
     class Particle {
         constructor() {
@@ -398,25 +329,13 @@
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx*dx + dy*dy);
-            let forceDirectionX = dx / distance;
-            let forceDirectionY = dy / distance;
-            let maxDistance = mouse.radius;
-            let force = (maxDistance - distance) / maxDistance;
-            let directionX = forceDirectionX * force * this.density;
-            let directionY = forceDirectionY * force * this.density;
-
             if (distance < mouse.radius) {
-                this.x -= directionX;
-                this.y -= directionY;
+                let force = (mouse.radius - distance) / mouse.radius;
+                this.x -= (dx / distance) * force * this.density;
+                this.y -= (dy / distance) * force * this.density;
             } else {
-                if (this.x !== this.baseX) {
-                    let dx = this.x - this.baseX;
-                    this.x -= dx/10;
-                }
-                if (this.y !== this.baseY) {
-                    let dy = this.y - this.baseY;
-                    this.y -= dy/10;
-                }
+                this.x += (this.baseX - this.x) * 0.1;
+                this.y += (this.baseY - this.y) * 0.1;
             }
         }
     }
@@ -425,74 +344,58 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         particles = [];
-        for (let i = 0; i < 150; i++) {
-            particles.push(new Particle());
-        }
+        for (let i = 0; i < 150; i++) { particles.push(new Particle()); }
     }
-
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].draw();
-            particles[i].update();
-        }
+        particles.forEach(p => { p.draw(); p.update(); });
         requestAnimationFrame(animate);
     }
+    init(); animate();
 
-    init();
-    animate();
-
-    /* 2. REVELADO Y RASGUÑO */
+    /* 4. REVELADO Y RASGUÑO */
     window.addEventListener('DOMContentLoaded', () => {
         const scratch = document.getElementById('scratchSVG');
         scratch.classList.add('animate');
-        
         setTimeout(() => {
             document.getElementById('scratchAnimation').classList.add('hidden');
             document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
             document.getElementById('mainCard').style.opacity = "1";
             document.getElementById('mainCard').style.transform = "scale(1) translateY(0)";
-            
-            // Texto secuencial
             const spans = document.querySelectorAll("#manifesto span");
-            spans.forEach((s, i) => {
-                setTimeout(() => s.classList.add("visible"), 500 * i);
-            });
+            spans.forEach((s, i) => { setTimeout(() => s.classList.add("visible"), 500 * i); });
         }, 1200);
     });
 
-    /* 3. AUDIO Y CLICK */
+    /* 5. AUDIO Y SCROLL */
     const ambient = document.getElementById("ambientSound");
     const howl = document.getElementById("howlSound");
 
-    // La música empezará al hacer clic en cualquier lugar de la web
     document.addEventListener("click", () => {
         if (ambient.paused) {
-            ambient.volume = 0.4; // Ajustado el volumen de Sia al 40%
-            ambient.play().catch(e => console.log("Audio bloqueado por el navegador"));
+            ambient.volume = 0.4;
+            ambient.play();
         }
     }, { once: true });
 
     document.getElementById('ahyronTitle').addEventListener('mouseenter', () => {
-        howl.currentTime = 0;
-        howl.volume = 0.4;
-        howl.play();
+        howl.currentTime = 0; howl.volume = 0.4; howl.play();
     });
 
-    /* 4. VISIÓN DE LOBO */
     document.getElementById('wolfVisionToggle').addEventListener('click', () => {
         document.body.classList.toggle('wolf-vision');
     });
 
-    /* 5. HUELLAS AL SCROLL */
     window.addEventListener('scroll', () => {
         const trigger = window.scrollY + window.innerHeight * 0.8;
         document.querySelectorAll('.paw-print').forEach(p => {
             if (trigger > p.offsetTop) p.classList.add('visible');
         });
+        // IDEA: Parallax en la Card al scrollear
+        const card = document.getElementById('mainCard');
+        card.style.transform = `translateY(${window.scrollY * -0.05}px)`;
     });
 
-    /* 6. STATS */
     let v = (parseInt(localStorage.getItem("ahyron_v")) || 0) + 1;
     localStorage.setItem("ahyron_v", v);
     document.getElementById("stats").textContent = `Rastro nº ${v}`;
