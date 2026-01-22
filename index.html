@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ahyron – El Lobo Salvaje</title>
 
-    <meta name="description" content="Ahyron, el lobo salvaje. Espíritu indomable, lealtad y manada.">
-    <meta name="author" content="Ahyron">
-
     <style>
         /* ─────────── BASE ─────────── */
         * { box-sizing: border-box; }
@@ -20,47 +17,23 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            transition: background 1.2s ease, color 1.2s ease, filter 0.8s ease; /* Transición para la visión de lobo */
+            transition: background 1.2s ease, filter 0.8s ease;
             overflow-x: hidden;
-            position: relative; /* Para las huellas */
+            position: relative;
         }
 
-        body.light {
-            background: radial-gradient(circle at top, #ffffff, #e0e7e7);
-            color: #1a1a1a;
-        }
-
-        /* FILTRO DE VISIÓN DE LOBO */
+        /* FILTRO DE VISIÓN DE LOBO (MEJORADO) */
         body.wolf-vision {
-            filter: grayscale(100%) contrast(200%) brightness(80%) hue-rotate(200deg) saturate(300%);
-            background: #0d001a !important; /* Fondo más oscuro para el efecto */
+            filter: grayscale(100%) contrast(150%) brightness(80%);
+            background: #050505 !important;
         }
-        body.wolf-vision .card {
-            box-shadow: 0 0 50px rgba(0,255,255,0.7) !important;
-        }
-        body.wolf-vision .side-content {
-            color: cyan !important;
-        }
-        body.wolf-vision h2, body.wolf-vision strong {
-            color: cyan !important;
-            text-shadow: 0 0 10px rgba(0,255,255,0.8) !important;
-        }
-        body.wolf-vision .manada {
-            background: rgba(0,255,255,0.1) !important;
-            border-top-color: rgba(0,255,255,0.3) !important;
-        }
-        body.wolf-vision .fog {
-            opacity: 0.3 !important;
-            filter: blur(1px);
+        body.wolf-vision h1, body.wolf-vision h2, body.wolf-vision strong {
+            color: #00ffff !important;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8) !important;
+            filter: none !important; /* Mantiene el color cian vibrante */
         }
 
-        .wrapper {
-            display: grid;
-            grid-template-columns: 1fr minmax(320px, 950px) 1fr;
-            width: 100%;
-        }
-
-        /* ─────────── NIEBLA ─────────── */
+        /* NIEBLA */
         .fog {
             position: fixed;
             inset: 0;
@@ -76,535 +49,283 @@
             to { background-position: 2000px 1000px; }
         }
 
-        /* ─────────── PARTICULAS ─────────── */
         #particles {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        /* ─────────── LATERALES ─────────── */
-        .side {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            inset: 0;
             z-index: 2;
+            pointer-events: none;
         }
 
-        .side.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr minmax(320px, 900px) 1fr;
+            width: 100%;
+            z-index: 5;
         }
 
-        .side-content {
-            writing-mode: vertical-rl;
-            letter-spacing: 6px;
-            color: rgba(127, 255, 212, 0.4);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        /* ─────────── CARD ─────────── */
         .card {
-            background: linear-gradient(180deg, rgba(0,0,0,0.95), rgba(5,15,20,0.98));
+            background: rgba(5, 15, 20, 0.95);
             border-radius: 30px;
+            margin: 60px 0;
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            margin: 60px 0;
+            border: 1px solid rgba(127, 255, 212, 0.1);
             opacity: 0;
-            transform: scale(0.98) translateY(30px);
-            animation: enter 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            z-index: 3;
-            border: 1px solid rgba(127, 255, 212, 0.05);
+            transform: translateY(30px);
+            transition: all 1.5s ease;
         }
 
-        body.light .card {
-            background: #ffffff;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        @keyframes enter {
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* ─────────── IMAGEN ─────────── */
         .image-container {
-            overflow: hidden;
             height: 500px;
+            overflow: hidden;
             position: relative;
-            cursor: pointer; /* Para el aullido */
         }
 
         .image-container img {
             width: 100%;
-            height: 115%;
+            height: 100%;
             object-fit: cover;
-            display: block;
-            filter: contrast(110%) saturate(110%);
-            transition: transform 0.15s ease-out;
-            will-change: transform;
+            transition: transform 0.5s ease;
         }
 
-        /* ─────────── CONTENIDO ─────────── */
-        .content {
-            padding: 60px 40px;
-            text-align: center;
-        }
+        .content { padding: 60px 40px; text-align: center; }
 
         h1 {
-            font-size: 3.5rem;
-            letter-spacing: 5px;
+            font-size: 4rem;
+            letter-spacing: 8px;
             margin: 0;
-            animation: breath 6s ease-in-out infinite;
             text-transform: uppercase;
-            cursor: pointer; /* Para el aullido */
+            color: #fff;
         }
 
-        @keyframes breath {
-            0%, 100% { letter-spacing: 5px; opacity: 0.9; }
-            50% { letter-spacing: 8px; opacity: 1; }
+        .music-pulse {
+            animation: pulse-audio 1.5s infinite ease-in-out;
         }
 
-        h2 {
-            font-weight: 300;
-            color: #7fffd4;
-            margin-bottom: 40px;
-            letter-spacing: 2px;
+        @keyframes pulse-audio {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(127, 255, 212, 0.2); }
+            50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(127, 255, 212, 0.6); }
         }
 
-        body.light h2 { color: #008b8b; }
+        h2 { color: #7fffd4; font-weight: 300; letter-spacing: 3px; }
 
-        p {
-            max-width: 60ch;
-            margin: auto;
-            line-height: 1.9;
-            font-size: 1.05rem;
-        }
-
-        strong {
-            color: #aef3e6;
-            text-shadow: 0 0 8px rgba(127,255,212,0.3);
-            animation: glow 4.5s ease-in-out infinite;
-        }
-
-        body.light strong { color: #005f5f; text-shadow: none; animation: none; }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 5px rgba(127,255,212,0.3); }
-            50% { text-shadow: 0 0 15px rgba(127,255,212,0.7); }
-        }
-
-        /* ─────────── TEXTO REVELADO ─────────── */
         #manifesto span {
             opacity: 0;
-            display: inline-block;
-            transform: translateY(15px);
-            transition: all 1s ease;
-        }
-
-        #manifesto span.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .final {
-            margin-top: 20px;
-            font-size: 1.4rem;
             display: block;
-            letter-spacing: 4px;
-            animation: pulse 3.5s ease-in-out infinite;
+            margin-bottom: 10px;
+            transform: translateY(10px);
+            transition: 1s ease;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
+        #manifesto span.visible { opacity: 1; transform: translateY(0); }
 
-        /* ─────────── MANADA ─────────── */
-        .manada {
-            margin-top: 40px;
-            padding: 60px 30px;
-            background: rgba(0,0,0,0.2);
-            border-top: 1px solid rgba(127,255,212,0.1);
-        }
-
-        body.light .manada { background: #f9fdfd; }
-
-        footer {
-            padding: 40px;
-            font-size: 0.85rem;
-            color: #88aaaa;
-            text-align: center;
-        }
-
-        /* ─────────── BOTÓN DE VISIÓN DE LOBO ─────────── */
-        #wolfVisionToggle {
+        /* CONTROLES FLOTANTES */
+        .controls {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 50px;
-            height: 50px;
-            background-color: rgba(127,255,212,0.8);
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 10000;
+        }
+
+        .btn-float {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            background: #7fffd4;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(127,255,212,0.6);
-            z-index: 100;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0.8;
-            border: none;
-            outline: none;
-        }
-        #wolfVisionToggle:hover {
-            background-color: #7fffd4;
-            box-shadow: 0 0 20px rgba(127,255,212,0.9);
-            opacity: 1;
-        }
-        #wolfVisionToggle svg {
-            width: 60%;
-            height: 60%;
-            fill: #000;
-            transition: fill 0.3s ease;
-        }
-        body.wolf-vision #wolfVisionToggle {
-            background-color: rgba(0,255,255,0.9);
-            box-shadow: 0 0 20px rgba(0,255,255,0.9);
-        }
-        body.wolf-vision #wolfVisionToggle svg {
-            fill: #fff;
+            box-shadow: 0 0 20px rgba(127, 255, 212, 0.4);
+            transition: 0.3s;
         }
 
-        /* ─────────── ANIMACIÓN DE RASGUÑO ─────────── */
-        #scratchAnimation {
+        .btn-float:hover { transform: scale(1.1); background: #fff; }
+
+        /* PANTALLA DE RASGUÑO */
+        #scratchOverlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            z-index: 9999;
+            inset: 0;
+            background: #000;
+            z-index: 100000;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 1.5s ease-out;
             pointer-events: none;
-            opacity: 1;
-        }
-        #scratchAnimation.hidden {
-            opacity: 0;
-            visibility: hidden;
+            transition: opacity 1s ease;
         }
 
         #scratchSVG {
-            width: 100%;
-            height: 100%;
+            width: 80%;
+            max-width: 600px;
             fill: none;
-            stroke: #333; /* Color de las garras */
-            stroke-width: 5px;
-            stroke-linecap: round;
-            stroke-dasharray: 1000; /* Lo suficientemente largo */
+            stroke: #1a1a1a;
+            stroke-width: 2;
+            stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
         }
 
         #scratchSVG.animate {
-            animation: scratchLine 1s ease-in-out forwards;
+            animation: draw 1.2s ease-in forwards;
         }
 
-        @keyframes scratchLine {
-            to {
-                stroke-dashoffset: 0;
-                opacity: 0; /* Las garras se desvanecen */
-            }
-        }
+        @keyframes draw { to { stroke-dashoffset: 0; opacity: 0; } }
 
-        /* ─────────── HUELLAS DE LOBO AL SCROLL ─────────── */
+        /* HUELLAS */
         .paw-print {
             position: absolute;
             width: 40px;
-            height: 40px;
             opacity: 0;
-            transition: opacity 0.5s ease-out, transform 0.5s ease;
-            transform: scale(0.8);
-            pointer-events: none;
-            z-index: 2; /* Sobre la niebla, debajo de la card */
+            transition: 1.5s ease;
+            z-index: 3;
+            filter: invert(1);
         }
-        .paw-print.visible {
-            opacity: 0.3; /* Transparencia de las huellas */
-            transform: scale(1);
-        }
-        body.wolf-vision .paw-print.visible {
-            opacity: 0.6;
-            filter: drop-shadow(0 0 5px cyan);
-        }
-
-        /* ─────────── RESPONSIVE ─────────── */
-        @media(max-width:900px){
-            .wrapper { grid-template-columns: 1fr; }
-            .side { display:none; }
-            h1 { font-size: 2.5rem; }
-            .image-container { height: 350px; }
-            #wolfVisionToggle { bottom: 15px; right: 15px; width: 40px; height: 40px; }
-            .paw-print { width: 30px; height: 30px; }
-        }
+        .paw-print.visible { opacity: 0.2; }
     </style>
 </head>
-
 <body>
 
-<div id="scratchAnimation">
-    <svg id="scratchSVG" viewbox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M10 20 Q30 5 50 20 M20 30 Q40 15 60 30" class="scratch-path" />
-        <path d="M30 50 Q50 35 70 50 M40 60 Q60 45 80 60" class="scratch-path" />
-        <path d="M50 80 Q70 65 90 80 M60 90 Q80 75 100 90" class="scratch-path" />
+<div id="scratchOverlay">
+    <svg id="scratchSVG" viewBox="0 0 100 100">
+        <path d="M20,10 Q30,50 20,90 M50,10 Q60,50 50,90 M80,10 Q90,50 80,90" />
     </svg>
 </div>
 
 <canvas id="particles"></canvas>
 <div class="fog"></div>
 
-<audio id="ambientSound" loop>
-    <source src="ambient-wolf-wind.mp3" type="audio/mpeg">
-</audio>
-<audio id="howlSound">
-    <source src="wolf-howl.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+    <source src="sia-bird.mp3" type="audio/mpeg">
 </audio>
 
 <div class="wrapper">
-    <aside class="side reveal">
-        <div class="side-content">Vigilia · Instinto · Silencio</div>
-    </aside>
-
-    <main class="card">
+    <aside></aside>
+    <main class="card" id="mainCard">
         <div class="image-container">
-            <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el Lobo" id="heroImage">
+            <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron" id="heroImage">
         </div>
-
         <div class="content">
             <h1 id="ahyronTitle">Ahyron</h1>
-            <h2>El Lobo Salvaje</h2>
-
+            <h2>EL LOBO SALVAJE</h2>
             <p id="manifesto">
-                <span><strong>Nacido del silencio y la sombra,</strong> bajo la misma luna y la misma tierra.</span><br>
-                <span>Sus ojos no buscan temor, sino el amor.</span><br><br>
-
-                <span>Ahyron no obedece fronteras ni voces ajenas.</span><br>
-                <span>Mira la noche sin temor, atento a un mundo que no se deja dominar.</span><br><br>
-
-                <span>No ataca por impulso, sino por instinto.</span><br>
-                <span>No actúa por seguir al rebaño, sino por convicción.</span><br>
-                <span><strong>Su fuerza no es individual: es colectiva.</strong></span><br><br>
-
-                <span>Vigila, protege y pertenece.</span><br>
-                <span class="final"><strong>La manada.</strong></span>
+                <span><strong>Nacido del silencio y la sombra.</strong></span>
+                <span>Instinto puro, lealtad eterna.</span>
+                <span>Mira la noche sin temor.</span>
+                <span><strong>La manada es el camino.</strong></span>
             </p>
         </div>
-
-        <section class="manada">
-            <h3>La Manada</h3>
-            <p>
-                La manada no se forma por número, sino por lealtad.<br>
-                La manada no sigue.<br>
-                <strong>Avanza.</strong>
-            </p>
-        </section>
-
-        <footer>
-            © 2026 · Ahyron · Espíritu indomable<br>
-            <small id="stats"></small>
-        </footer>
     </main>
-
-    <aside class="side reveal">
-        <div class="side-content">Manada · Lealtad · Noche</div>
-    </aside>
+    <aside></aside>
 </div>
 
-<button id="wolfVisionToggle" aria-label="Activar visión de lobo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.5 92.9-131.3c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-92.9-131.3C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64s-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64z"/></svg>
-</button>
+<div class="controls">
+    <button id="musicToggle" class="btn-float" title="Música de Sia">🎵</button>
+    <button id="wolfVisionToggle" class="btn-float" title="Visión de Lobo">👁️</button>
+</div>
 
-<img src="paw.svg" class="paw-print" style="left: 10%; top: 600px; transform: rotate(-20deg);" alt="huella">
-<img src="paw.svg" class="paw-print" style="left: 80%; top: 900px; transform: rotate(15deg);" alt="huella">
-<img src="paw.svg" class="paw-print" style="left: 20%; top: 1250px; transform: rotate(5deg);" alt="huella">
-<img src="paw.svg" class="paw-print" style="left: 70%; top: 1550px; transform: rotate(-10deg);" alt="huella">
-<img src="paw.svg" class="paw-print" style="left: 30%; top: 1900px; transform: rotate(25deg);" alt="huella">
+<img src="https://www.svgrepo.com/show/41561/wolf-paw.svg" class="paw-print" style="top: 700px; left: 10%; transform: rotate(-20deg);">
+<img src="https://www.svgrepo.com/show/41561/wolf-paw.svg" class="paw-print" style="top: 1000px; right: 10%; transform: rotate(15deg);">
 
 <script>
-    /* -------------------------------------- */
-    /* 1. ANIMACIÓN DE RASGUÑO INICIAL */
-    /* -------------------------------------- */
-    const scratchAnimation = document.getElementById('scratchAnimation');
-    const scratchSVG = document.getElementById('scratchSVG');
-    
-    // Anima el SVG y luego oculta la capa
-    function startScratchAnimation() {
-        scratchSVG.classList.add('animate');
-        setTimeout(() => {
-            scratchAnimation.classList.add('hidden');
-        }, 1500); // Duración de la animación del rasguño
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicToggle');
+    const title = document.getElementById('ahyronTitle');
+
+    // 1. CONTROL DE MÚSICA (SIA - BIRD SET FREE)
+    function toggleMusic() {
+        if (music.paused) {
+            music.volume = 0.4;
+            music.play();
+            title.classList.add('music-pulse');
+            musicBtn.innerText = '⏸️';
+        } else {
+            music.pause();
+            title.classList.remove('music-pulse');
+            musicBtn.innerText = '🎵';
+        }
     }
 
-    /* -------------------------------------- */
-    /* 2. EFECTO PARALAJE DE IMAGEN */
-    /* -------------------------------------- */
-    const heroImg = document.getElementById('heroImage');
-    document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 60;
-        const y = (window.innerHeight / 2 - e.pageY) / 60;
-        heroImg.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+    musicBtn.addEventListener('click', toggleMusic);
+    document.addEventListener('click', () => {
+        if (music.paused) toggleMusic();
+    }, { once: true });
+
+    // 2. ANIMACIÓN DE ENTRADA (RASGUÑO)
+    window.addEventListener('load', () => {
+        document.getElementById('scratchSVG').classList.add('animate');
+        setTimeout(() => {
+            document.getElementById('scratchOverlay').style.opacity = '0';
+            const card = document.getElementById('mainCard');
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+            
+            const spans = document.querySelectorAll('#manifesto span');
+            spans.forEach((s, i) => {
+                setTimeout(() => s.classList.add('visible'), i * 600);
+            });
+        }, 1200);
     });
 
-    /* -------------------------------------- */
-    /* 3. PARTICULAS FLOTANTES (ESTRELLAS/NIEVE) */
-    /* -------------------------------------- */
+    // 3. VISIÓN DE LOBO
+    document.getElementById('wolfVisionToggle').addEventListener('click', () => {
+        document.body.classList.toggle('wolf-vision');
+    });
+
+    // 4. PARTÍCULAS
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
-    let dots = [];
+    let particles = [];
 
     function initParticles() {
         canvas.width = window.innerWidth;
-        canvas.height = document.documentElement.scrollHeight; // Cubre todo el scroll
-        dots = [];
-        const numParticles = Math.floor(window.innerWidth / 15); // Más partículas en pantallas grandes
-        for (let i = 0; i < numParticles; i++) {
-            dots.push({
+        canvas.height = window.innerHeight;
+        particles = [];
+        for (let i = 0; i < 80; i++) {
+            particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                size: Math.random() * 1.5 + 0.5,
-                speedY: Math.random() * 0.4 + 0.1,
-                opacity: Math.random() * 0.6 + 0.2
+                size: Math.random() * 2,
+                speed: Math.random() * 0.5 + 0.2
             });
         }
     }
 
-    function drawParticles() {
+    function animateParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        dots.forEach(dot => {
-            ctx.fillStyle = `rgba(127, 255, 212, ${dot.opacity})`;
+        ctx.fillStyle = "rgba(127, 255, 212, 0.3)";
+        particles.forEach(p => {
             ctx.beginPath();
-            ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
-
-            dot.y -= dot.speedY; // Mueve hacia arriba
-            if (dot.y < 0) dot.y = canvas.height; // Reinicia desde abajo
+            p.y -= p.speed;
+            if (p.y < 0) p.y = canvas.height;
         });
-        requestAnimationFrame(drawParticles);
+        requestAnimationFrame(animateParticles);
     }
 
-    window.addEventListener('resize', initParticles);
-    // Asegura que las partículas se redibujen cuando se hace scroll para mantener la perspectiva
-    window.addEventListener('scroll', () => {
-        canvas.style.transform = `translateY(${window.scrollY}px)`;
-    });
     initParticles();
-    drawParticles();
+    animateParticles();
 
-    /* -------------------------------------- */
-    /* 4. REVELADO AL CARGAR (AUTOMÁTICO) */
-    /* -------------------------------------- */
-    window.addEventListener('DOMContentLoaded', () => {
-        startScratchAnimation(); // Inicia el rasguño primero
-
-        // Revelar laterales y tarjeta principal después de que el rasguño empiece a desaparecer
-        setTimeout(() => {
-            document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
-            document.querySelector(".card").style.animation = 'enter 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
-        }, 1000); // Empieza a revelarse a la mitad de la animación del rasguño
-
-        // Secuencia de texto automática
-        const manifestoSpans = document.querySelectorAll("#manifesto span");
-        manifestoSpans.forEach((line, i) => {
-            setTimeout(() => {
-                line.classList.add("visible");
-            }, 2000 + (i * 500)); // Empieza más tarde para dejar ver el fondo
-        });
-    });
-
-    /* -------------------------------------- */
-    /* 5. ACTIVACIÓN DE AUDIO POR INTERACCIÓN */
-    /* -------------------------------------- */
-    const ambientSound = document.getElementById("ambientSound");
-    const howlSound = document.getElementById("howlSound");
-
-    document.addEventListener("click", () => {
-        if (ambientSound.paused) {
-            ambientSound.volume = 0.2;
-            ambientSound.play().catch(() => {});
-        }
-    }, { once: true }); // Solo necesita un clic para desbloquear el audio del navegador
-
-    /* -------------------------------------- */
-    /* 6. AULLIDO AL PASAR EL RATÓN */
-    /* -------------------------------------- */
-    const ahyronTitle = document.getElementById('ahyronTitle');
-    const heroImage = document.getElementById('heroImage');
-    let howlTimeout;
-
-    const playHowl = () => {
-        clearTimeout(howlTimeout); // Cancela aullidos previos para evitar superposición
-        if (!howlSound.paused) {
-            howlSound.pause();
-            howlSound.currentTime = 0;
-        }
-        howlSound.volume = 0.4;
-        howlSound.play().catch(() => {});
-    };
-
-    ahyronTitle.addEventListener('mouseenter', playHowl);
-    heroImage.addEventListener('mouseenter', playHowl);
-
-    /* -------------------------------------- */
-    /* 7. MODO DÍA / NOCHE AUTOMÁTICO */
-    /* -------------------------------------- */
-    const hour = new Date().getHours();
-    if (hour >= 7 && hour < 19) {
-        document.body.classList.add("light");
-    }
-
-    /* -------------------------------------- */
-    /* 8. BOTÓN DE VISIÓN DE LOBO */
-    /* -------------------------------------- */
-    const wolfVisionToggle = document.getElementById('wolfVisionToggle');
-    wolfVisionToggle.addEventListener('click', () => {
-        document.body.classList.toggle('wolf-vision');
-    });
-
-    /* -------------------------------------- */
-    /* 9. HUELLAS AL SCROLL */
-    /* -------------------------------------- */
-    const pawPrints = document.querySelectorAll('.paw-print');
+    // 5. SCROLL (HUELLAS)
     window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY + window.innerHeight;
-
-        pawPrints.forEach(paw => {
-            if (scrollPosition > paw.offsetTop + 50) { // +50 para que aparezca un poco antes
+        document.querySelectorAll('.paw-print').forEach(paw => {
+            if (window.scrollY + window.innerHeight > paw.offsetTop + 100) {
                 paw.classList.add('visible');
-            } else {
-                paw.classList.remove('visible');
             }
         });
     });
 
-    /* -------------------------------------- */
-    /* 10. CONTADOR DE VISITAS LOCAL */
-    /* -------------------------------------- */
-    let visits = Number(localStorage.getItem("ahyron_visits")) || 0;
-    visits++;
-    localStorage.setItem("ahyron_visits", visits);
-    document.getElementById("stats").textContent = `Visitante nº ${visits}`;
+    // 6. PARALLAX IMAGEN
+    document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.pageX) / 50;
+        const y = (window.innerHeight / 2 - e.pageY) / 50;
+        document.getElementById('heroImage').style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+    });
 </script>
 
 </body>
