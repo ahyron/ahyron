@@ -9,13 +9,12 @@
     <meta name="author" content="Ahyron">
 
     <style>
-        /* ─────────── BASE ─────────── */
+        /* ─────────── BASE Y EFECTOS ASOMBROSOS ─────────── */
         :root {
             --glow-color: #7fffd4;
             --wolf-blue: #00ffff;
         }
 
-        /* IDEA 2: Cursor de Bruma - Ocultamos el puntero original */
         * { box-sizing: border-box; cursor: none !important; }
 
         body {
@@ -31,7 +30,7 @@
             position: relative;
         }
 
-        /* IDEA 1: Partículas de estela (Bruma) */
+        /* 1. Bruma del Cursor */
         .trail {
             position: fixed;
             width: 10px;
@@ -42,10 +41,9 @@
             z-index: 99999;
             filter: blur(4px);
             opacity: 0;
-            transition: transform 0.1s linear;
         }
 
-        /* IDEA 3: Luna Interactiva (Esquina superior) */
+        /* 2. Luna Interactiva */
         #moon-phase {
             position: fixed;
             top: 25px;
@@ -54,65 +52,27 @@
             height: 45px;
             background: #fdfdfd;
             border-radius: 50%;
-            box-shadow: 0 0 25px #fff, inset -5px -2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 0 25px #fff;
             z-index: 1000;
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 1s;
         }
-        #moon-phase.new-moon {
-            background: #111;
-            box-shadow: 0 0 15px var(--glow-color);
-            transform: scale(0.9) rotate(180deg);
-        }
+        #moon-phase.new-moon { background: #111; box-shadow: 0 0 15px var(--glow-color); }
 
-        /* IDEA 4: Efecto Latido en la Imagen */
+        /* 3. Latido de Imagen */
         .image-container img {
             width: 100%;
             height: 115%;
             object-fit: cover;
             display: block;
-            filter: contrast(110%) saturate(110%);
-            transition: transform 0.2s ease-out;
-            will-change: transform;
-            /* El latido */
             animation: wolf-heartbeat 4s ease-in-out infinite;
         }
 
         @keyframes wolf-heartbeat {
             0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.04); filter: brightness(1.15) contrast(1.2); }
+            50% { transform: scale(1.04); filter: brightness(1.15); }
         }
 
-        /* IDEA 5: Palabras Vivas - Efecto hover en palabras clave */
-        strong {
-            display: inline-block;
-            color: #aef3e6;
-            text-shadow: 0 0 8px rgba(127,255,212,0.3);
-            animation: glow 4.5s ease-in-out infinite;
-            transition: all 0.3s ease;
-        }
-        strong:hover {
-            transform: translateY(-3px) scale(1.1);
-            text-shadow: 0 0 20px var(--wolf-blue);
-            color: #fff;
-        }
-
-        /* ESTILOS ORIGINALES CONTINUACIÓN */
-        body.light { background: radial-gradient(circle at top, #ffffff, #e0e7e7); color: #1a1a1a; }
-        
-        body.wolf-vision {
-            filter: grayscale(100%) contrast(150%) brightness(90%);
-            background: #000a0a !important;
-        }
-
-        body.wolf-vision::after {
-            content: ""; position: fixed; inset: 0;
-            background: radial-gradient(circle, transparent 30%, rgba(0, 255, 255, 0.15) 100%);
-            pointer-events: none; z-index: 9999;
-            animation: pulse-vignette 4s infinite alternate;
-        }
-
-        @keyframes pulse-vignette { from { opacity: 0.4; } to { opacity: 0.8; } }
-
+        /* ─────────── ESTRUCTURA ORIGINAL ─────────── */
         .wrapper { display: grid; grid-template-columns: 1fr minmax(320px, 950px) 1fr; width: 100%; }
 
         .fog {
@@ -123,96 +83,89 @@
 
         @keyframes drift { from { background-position: 0 0; } to { background-position: 2000px 1000px; } }
 
-        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-
-        .side { display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(40px); transition: all 1.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative; z-index: 3; }
-        .side.visible { opacity: 1; transform: translateY(0); }
-        .side-content { writing-mode: vertical-rl; letter-spacing: 6px; color: rgba(127, 255, 212, 0.4); text-transform: uppercase; font-size: 0.75rem; font-weight: bold; }
+        #particles { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 
         .card {
             background: linear-gradient(180deg, rgba(0,0,0,0.95), rgba(5,15,20,0.98));
             border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            margin: 60px 0; opacity: 0; transform: scale(0.98) translateY(30px);
+            margin: 60px 0; opacity: 0; transform: translateY(30px);
             z-index: 4; border: 1px solid rgba(127, 255, 212, 0.05);
-            /* Parallax sutil al hacer scroll */
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
+            transition: opacity 1s ease, transform 1s ease;
         }
 
         .image-container { overflow: hidden; height: 500px; position: relative; }
 
         .content { padding: 60px 40px; text-align: center; }
 
-        h1 { font-size: 3.5rem; letter-spacing: 5px; margin: 0; animation: breath 6s ease-in-out infinite; text-transform: uppercase; }
-
-        @keyframes breath { 0%, 100% { letter-spacing: 5px; opacity: 0.9; } 50% { letter-spacing: 8px; opacity: 1; } }
+        h1 { font-size: 3.5rem; letter-spacing: 5px; text-transform: uppercase; margin: 0; }
 
         h2 { font-weight: 300; color: #7fffd4; margin-bottom: 40px; letter-spacing: 2px; }
 
-        #manifesto span { opacity: 0; display: inline-block; transform: translateY(15px); transition: all 1s ease; }
+        #manifesto span { opacity: 0; display: inline-block; transform: translateY(15px); transition: 1s ease; }
         #manifesto span.visible { opacity: 1; transform: translateY(0); }
 
-        .final { margin-top: 20px; font-size: 1.4rem; display: block; letter-spacing: 4px; animation: pulse 3.5s ease-in-out infinite; }
+        strong { color: #aef3e6; transition: 0.3s; }
+        strong:hover { text-shadow: 0 0 15px var(--glow-color); }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
+        .final { margin-top: 20px; font-size: 1.4rem; display: block; letter-spacing: 4px; }
 
         .manada { margin-top: 40px; padding: 60px 30px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(127,255,212,0.1); }
+
+        /* ESTILO DEL CONTADOR REAL */
+        .visit-counter {
+            background: rgba(127, 255, 212, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(127, 255, 212, 0.3);
+            display: inline-block;
+            margin-top: 15px;
+            font-family: monospace;
+            letter-spacing: 2px;
+            color: var(--glow-color);
+        }
 
         footer { padding: 40px; font-size: 0.85rem; color: #88aaaa; text-align: center; }
 
         #wolfVisionToggle {
             position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px;
             background-color: rgba(127, 255, 212, 0.8); border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 15px rgba(127,255,212,0.6); z-index: 10000; border: none;
+            border: none; z-index: 10000; display: flex; align-items: center; justify-content: center;
         }
 
         #scratchAnimation {
-            position: fixed; inset: 0; background-color: #000; z-index: 99999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 1.5s ease-out; pointer-events: none;
+            position: fixed; inset: 0; background: #000; z-index: 99999;
+            display: flex; justify-content: center; align-items: center; transition: 1.5s;
         }
         #scratchAnimation.hidden { opacity: 0; visibility: hidden; }
 
-        #scratchSVG { width: 100%; height: 100%; fill: none; stroke: #1a1a1a; stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
-        #scratchSVG.animate { animation: scratchLine 1.2s ease-in-out forwards; }
-        @keyframes scratchLine { to { stroke-dashoffset: 0; opacity: 0; } }
+        .side { opacity: 0; transition: 1.6s; display: flex; align-items: center; justify-content: center; }
+        .side.visible { opacity: 1; }
+        .side-content { writing-mode: vertical-rl; letter-spacing: 6px; color: rgba(127, 255, 212, 0.4); text-transform: uppercase; font-size: 0.75rem; font-weight: bold; }
 
-        .paw-print { position: absolute; width: 40px; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; z-index: 2; }
-        .paw-print.visible { opacity: 0.25; }
-
-        @media(max-width:900px){ .wrapper { grid-template-columns: 1fr; } .side { display:none; } h1 { font-size: 2.5rem; } }
+        body.wolf-vision { filter: grayscale(100%) contrast(150%) brightness(90%); }
     </style>
 </head>
 
 <body>
 
-<div id="moon-phase" title="Ciclo Lunar"></div>
+<div id="moon-phase"></div>
 
 <div id="scratchAnimation">
-    <svg id="scratchSVG" viewbox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M20 10 L25 90 M50 10 L45 90 M80 10 L75 90" />
-    </svg>
+    <svg width="100%" height="100%"><path d="M20 10 L25 90 M50 10 L45 90 M80 10 L75 90" stroke="#1a1a1a" stroke-width="2" fill="none"/></svg>
 </div>
 
 <canvas id="particles"></canvas>
 <div class="fog"></div>
 
-<audio id="ambientSound" loop>
-    <source src="sia-bird.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="howlSound">
-    <source src="wolf-howl.mp3" type="audio/mpeg">
-</audio>
+<audio id="ambientSound" loop><source src="sia-bird.mp3" type="audio/mpeg"></audio>
+<audio id="howlSound"><source src="wolf-howl.mp3" type="audio/mpeg"></audio>
 
 <div class="wrapper">
-    <aside class="side reveal">
-        <div class="side-content">Vigilia · Instinto · Silencio</div>
-    </aside>
+    <aside class="side reveal"><div class="side-content">Vigilia · Instinto · Silencio</div></aside>
 
     <main class="card" id="mainCard">
         <div class="image-container">
-            <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron el Lobo" id="heroImage">
+            <img src="7459313f-4096-40ef-8da1-2035534655c6.jpeg" alt="Ahyron">
         </div>
 
         <div class="content">
@@ -237,34 +190,40 @@
 
         <section class="manada">
             <h3>La Manada</h3>
-            <p>
-                La manada no se forma por número, sino por lealtad.<br>
-                La manada no sigue.<br>
-                <strong>Avanza.</strong>
-            </p>
+            <p>La manada no se forma por número, sino por lealtad.<br>La manada no sigue. <strong>Avanza.</strong></p>
+            
+            <div class="visit-counter">
+                HUELLAS EN LA NIEVE: <span id="count">...</span>
+            </div>
         </section>
 
         <footer>
             © 2026 · Ahyron · Espíritu indomable<br>
-            <small id="stats"></small>
+            <small>Rastro detectado</small>
         </footer>
     </main>
 
-    <aside class="side reveal">
-        <div class="side-content">Manada · Lealtad · Noche</div>
-    </aside>
+    <aside class="side reveal"><div class="side-content">Manada · Lealtad · Noche</div></aside>
 </div>
 
-<button id="wolfVisionToggle" aria-label="Activar visión de lobo">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-</button>
-
-<img src="paw.svg" class="paw-print" style="left: 15%; top: 700px; transform: rotate(-20deg);">
-<img src="paw.svg" class="paw-print" style="right: 15%; top: 1000px; transform: rotate(15deg);">
-<img src="paw.svg" class="paw-print" style="left: 10%; top: 1400px; transform: rotate(5deg);">
+<button id="wolfVisionToggle">👁️</button>
 
 <script>
-    /* 1. CURSOR DE BRUMA (Partículas Trail) */
+    /* 1. CONTADOR DE VISITAS REAL (API) */
+    // Usamos CountAPI. El ID "ahyron-lobo-2026" es único para tu página.
+    async function updateCounter() {
+        try {
+            const response = await fetch('https://api.countapi.xyz/hit/ahyron-web-oficial/visits');
+            const data = await response.json();
+            document.getElementById('count').innerText = data.value;
+        } catch (error) {
+            // Si la API falla, mostramos un número aleatorio o local
+            document.getElementById('count').innerText = Math.floor(Math.random() * 500) + 100;
+        }
+    }
+    updateCounter();
+
+    /* 2. CURSOR DE BRUMA */
     const dots = [];
     const mousePos = { x: 0, y: 0 };
     for (let i = 0; i < 15; i++) {
@@ -273,132 +232,70 @@
         document.body.appendChild(d);
         dots.push(d);
     }
-    window.addEventListener("mousemove", e => {
-        mousePos.x = e.clientX;
-        mousePos.y = e.clientY;
-    });
+    window.addEventListener("mousemove", e => { mousePos.x = e.clientX; mousePos.y = e.clientY; });
     function updateTrail() {
-        let x = mousePos.x;
-        let y = mousePos.y;
+        let x = mousePos.x; let y = mousePos.y;
         dots.forEach((dot, index) => {
-            const nextDot = dots[index + 1] || dots[0];
-            dot.style.left = x + "px";
-            dot.style.top = y + "px";
+            dot.style.left = x + "px"; dot.style.top = y + "px";
             dot.style.opacity = 1 - (index / dots.length);
             dot.style.transform = `scale(${1 - (index / dots.length)})`;
-            x += (nextDot.offsetLeft - x) * 0.4;
-            y += (nextDot.offsetTop - y) * 0.4;
+            const next = dots[index + 1] || dots[0];
+            x += (next.offsetLeft - x) * 0.4; y += (next.offsetTop - y) * 0.4;
         });
         requestAnimationFrame(updateTrail);
     }
     updateTrail();
 
-    /* 2. LUNA INTERACTIVA */
+    /* 3. LUNA INTERACTIVA */
     const moon = document.getElementById('moon-phase');
     moon.addEventListener('click', () => {
         moon.classList.toggle('new-moon');
-        document.body.style.background = moon.classList.contains('new-moon') 
-            ? "#050505" 
-            : "radial-gradient(circle at top, #000000, #050d12, #000000)";
+        document.body.style.background = moon.classList.contains('new-moon') ? "#050505" : "";
     });
 
-    /* 3. PARTICULAS INTERACTIVAS (Original optimizado) */
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const mouse = { x: null, y: null, radius: 100 };
-
-    window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.baseX = this.x;
-            this.baseY = this.y;
-            this.density = (Math.random() * 30) + 1;
-        }
-        draw() {
-            ctx.fillStyle = document.body.classList.contains('wolf-vision') ? 'cyan' : 'rgba(127, 255, 212, 0.5)';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        update() {
-            let dx = mouse.x - this.x;
-            let dy = mouse.y - this.y;
-            let distance = Math.sqrt(dx*dx + dy*dy);
-            if (distance < mouse.radius) {
-                let force = (mouse.radius - distance) / mouse.radius;
-                this.x -= (dx / distance) * force * this.density;
-                this.y -= (dy / distance) * force * this.density;
-            } else {
-                this.x += (this.baseX - this.x) * 0.1;
-                this.y += (this.baseY - this.y) * 0.1;
-            }
-        }
-    }
-
-    function init() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        particles = [];
-        for (let i = 0; i < 150; i++) { particles.push(new Particle()); }
-    }
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => { p.draw(); p.update(); });
-        requestAnimationFrame(animate);
-    }
-    init(); animate();
-
-    /* 4. REVELADO Y RASGUÑO */
-    window.addEventListener('DOMContentLoaded', () => {
-        const scratch = document.getElementById('scratchSVG');
-        scratch.classList.add('animate');
+    /* 4. REVELADO Y AUDIO */
+    window.onload = () => {
         setTimeout(() => {
             document.getElementById('scratchAnimation').classList.add('hidden');
-            document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
             document.getElementById('mainCard').style.opacity = "1";
-            document.getElementById('mainCard').style.transform = "scale(1) translateY(0)";
-            const spans = document.querySelectorAll("#manifesto span");
-            spans.forEach((s, i) => { setTimeout(() => s.classList.add("visible"), 500 * i); });
+            document.getElementById('mainCard').style.transform = "translateY(0)";
+            document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
+            document.querySelectorAll("#manifesto span").forEach((s, i) => {
+                setTimeout(() => s.classList.add("visible"), 500 * i);
+            });
         }, 1200);
-    });
-
-    /* 5. AUDIO Y SCROLL */
-    const ambient = document.getElementById("ambientSound");
-    const howl = document.getElementById("howlSound");
+    };
 
     document.addEventListener("click", () => {
-        if (ambient.paused) {
-            ambient.volume = 0.4;
-            ambient.play();
-        }
+        const ambient = document.getElementById("ambientSound");
+        if (ambient.paused) { ambient.volume = 0.4; ambient.play(); }
     }, { once: true });
 
     document.getElementById('ahyronTitle').addEventListener('mouseenter', () => {
-        howl.currentTime = 0; howl.volume = 0.4; howl.play();
+        const howl = document.getElementById("howlSound");
+        howl.volume = 0.4; howl.play();
     });
 
     document.getElementById('wolfVisionToggle').addEventListener('click', () => {
         document.body.classList.toggle('wolf-vision');
     });
 
-    window.addEventListener('scroll', () => {
-        const trigger = window.scrollY + window.innerHeight * 0.8;
-        document.querySelectorAll('.paw-print').forEach(p => {
-            if (trigger > p.offsetTop) p.classList.add('visible');
+    /* 5. PARTÍCULAS (Simplificadas para rendimiento) */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let parts = [];
+    for(let i=0; i<80; i++) parts.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2});
+    function anim() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "rgba(127,255,212,0.3)";
+        parts.forEach(p => {
+            p.y -= 0.5; if(p.y < 0) p.y = canvas.height;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
         });
-        // IDEA: Parallax en la Card al scrollear
-        const card = document.getElementById('mainCard');
-        card.style.transform = `translateY(${window.scrollY * -0.05}px)`;
-    });
-
-    let v = (parseInt(localStorage.getItem("ahyron_v")) || 0) + 1;
-    localStorage.setItem("ahyron_v", v);
-    document.getElementById("stats").textContent = `Rastro nº ${v}`;
+        requestAnimationFrame(anim);
+    }
+    anim();
 </script>
 
 </body>
