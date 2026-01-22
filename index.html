@@ -28,7 +28,7 @@
         
         #heroImage {
             width: 100%; height: 100%; object-fit: cover; display: block;
-            transition: opacity 1.5s ease-in-out; 
+            transition: opacity 1.5s ease-in-out; /* Transición suave */
             animation: wolf-heartbeat 5s ease-in-out infinite;
         }
 
@@ -64,10 +64,9 @@
         }
 
         footer { padding: 40px; font-size: 0.85rem; color: #88aaaa; text-align: center; }
-        #wolfVisionToggle { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--glow); border-radius: 50%; border: none; z-index: 10000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        #wolfVisionToggle { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--glow); border-radius: 50%; border: none; z-index: 10000; cursor: pointer; }
 
-        body.wolf-vision { filter: grayscale(100%) contrast(150%) brightness(0.8); }
-        body.wolf-vision .card { border-color: var(--wolf-blue); box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+        body.wolf-vision { filter: grayscale(100%) contrast(150%) cyan-glow; }
     </style>
 </head>
 <body>
@@ -79,7 +78,7 @@
 <audio id="howlSound"><source src="wolf-howl.mp3" type="audio/mpeg"></audio>
 
 <div class="wrapper">
-    <aside style="opacity:0.3; writing-mode:vertical-rl; text-align:center; padding:20px; font-size: 0.8rem; letter-spacing: 4px;">INSTINTO • LEALTAD • NOCHE</aside>
+    <aside style="opacity:0.3; writing-mode:vertical-rl; text-align:center; padding:20px;">INSTINTO • LEALTAD • NOCHE</aside>
 
     <main class="card" id="mainCard">
         <div class="image-container">
@@ -99,7 +98,7 @@
                 <span>No actúa por seguir al rebaño, sino por convicción.</span><br>
                 <span><strong>Su fuerza no es individual: es colectiva.</strong></span><br><br>
                 <span>Vigila, protege y pertenece.</span><br>
-                <span style="font-size:1.5rem; letter-spacing:5px; margin-top: 20px;"><strong>LA MANADA.</strong></span>
+                <span style="font-size:1.5rem; letter-spacing:5px;"><strong>LA MANADA.</strong></span>
             </p>
 
             <div class="visit-counter">
@@ -110,16 +109,16 @@
         <footer>© 2026 · Ahyron · Espíritu indomable</footer>
     </main>
 
-    <aside style="opacity:0.3; writing-mode:vertical-rl; text-align:center; padding:20px; font-size: 0.8rem; letter-spacing: 4px;">VIGILIA • SILENCIO • MANADA</aside>
+    <aside style="opacity:0.3; writing-mode:vertical-rl; text-align:center; padding:20px;">VIGILIA • SILENCIO • MANADA</aside>
 </div>
 
-<button id="wolfVisionToggle" title="Visión de Lobo">👁️</button>
+<button id="wolfVisionToggle">👁️</button>
 
 <script>
     /* 1. CAMBIO AUTOMÁTICO DE IMÁGENES */
     const imagenes = [
-        "7459313f-4096-40ef-8da1-2035534655c6.jpeg",
-        "d303ae3c-eb77-4045-9f87-f9b579de61ca.jpeg",
+        "7459313f-4096-40ef-8da1-2035534655c6.jpeg", // Tu imagen original
+        "d303ae3c-eb77-4045-9f87-f9b579de61ca.jpeg", // Añade aquí tus otras fotos
         "3580fab3-1bbd-42bd-9af8-d883eb398a7b.jpeg"
     ];
     let indice = 0;
@@ -127,27 +126,23 @@
 
     function cambiarImagen() {
         indice = (indice + 1) % imagenes.length;
-        heroImage.style.opacity = 0; 
+        heroImage.style.opacity = 0; // Se desvanece
         
         setTimeout(() => {
             heroImage.src = imagenes[indice];
-            heroImage.style.opacity = 1; 
+            heroImage.style.opacity = 1; // Aparece la nueva
         }, 1500);
     }
-    // Ciclo de 8 segundos para apreciar cada imagen
-    setInterval(cambiarImagen, 8000);
+    // Cambia cada 7 segundos (5 de vista + 2 de transición)
+    setInterval(cambiarImagen, 7000);
 
-    /* 2. CONTADOR DE VISITAS */
+    /* 2. CONTADOR REAL */
     async function updateCounter() {
         try {
-            // Nota: CountAPI puede ser inestable. Si falla, usa un valor base.
             const res = await fetch('https://api.countapi.xyz/hit/ahyron-web-2026/visits');
             const data = await res.json();
             document.getElementById('count').innerText = data.value;
-        } catch(e) { 
-            // Valor de respaldo estético si la API no responde
-            document.getElementById('count').innerText = "1,024"; 
-        }
+        } catch(e) { document.getElementById('count').innerText = "1,024"; }
     }
     updateCounter();
 
@@ -182,50 +177,31 @@
         });
     };
 
-    // Activar audio ambiental al primer clic
     document.addEventListener("click", () => {
         const audio = document.getElementById("ambientSound");
-        if(audio.paused) { audio.volume = 0.3; audio.play(); }
+        if(audio.paused) { audio.volume = 0.4; audio.play(); }
     }, {once: true});
 
-    // Aullido al pasar el ratón por el título
     document.getElementById('ahyronTitle').addEventListener('mouseenter', () => {
         const howl = document.getElementById("howlSound");
-        howl.currentTime = 0;
-        howl.volume = 0.3; 
-        howl.play();
+        howl.volume = 0.3; howl.play();
     });
 
     document.getElementById('wolfVisionToggle').addEventListener('click', () => {
         document.body.classList.toggle('wolf-vision');
     });
 
-    /* 5. PARTÍCULAS AMBIENTALES */
+    /* 5. PARTÍCULAS */
     const cvs = document.getElementById('particles');
     const cx = cvs.getContext('2d');
-    function resize() {
-        cvs.width = window.innerWidth;
-        cvs.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
+    cvs.width = window.innerWidth; cvs.height = window.innerHeight;
     let pArray = [];
-    for(let i=0; i<70; i++) {
-        pArray.push({
-            x: Math.random()*cvs.width, 
-            y: Math.random()*cvs.height, 
-            r: Math.random()*1.5,
-            v: Math.random()*0.5 + 0.1
-        });
-    }
-
+    for(let i=0; i<70; i++) pArray.push({x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*1.5});
     function drawP() {
         cx.clearRect(0,0,cvs.width,cvs.height);
         cx.fillStyle = "rgba(127,255,212,0.2)";
         pArray.forEach(p => {
-            p.y -= p.v; 
-            if(p.y < 0) p.y = cvs.height;
+            p.y -= 0.3; if(p.y < 0) p.y = cvs.height;
             cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI*2); cx.fill();
         });
         requestAnimationFrame(drawP);
