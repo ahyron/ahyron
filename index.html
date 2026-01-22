@@ -6,7 +6,7 @@
     <title>Ahyron – El Lobo Salvaje</title>
 
     <style>
-        /* ─────────── BASE ─────────── */
+        /* ─────────── BASE Y ESTILOS ─────────── */
         * { box-sizing: border-box; }
 
         body {
@@ -22,33 +22,21 @@
             position: relative;
         }
 
-        /* FILTRO DE VISIÓN DE LOBO (MEJORADO) */
+        /* VISIÓN DE LOBO */
         body.wolf-vision {
             filter: grayscale(100%) contrast(150%) brightness(80%);
-            background: #050505 !important;
-        }
-        body.wolf-vision h1, body.wolf-vision h2, body.wolf-vision strong {
-            color: #00ffff !important;
-            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8) !important;
-            filter: none !important; /* Mantiene el color cian vibrante */
         }
 
-        /* NIEBLA */
-        .fog {
+        body.wolf-vision::after {
+            content: "";
             position: fixed;
             inset: 0;
-            background: url("https://www.transparenttextures.com/patterns/foggy-birds.png");
-            opacity: 0.12;
-            animation: drift 120s linear infinite;
+            background: radial-gradient(circle, transparent 30%, rgba(0, 255, 255, 0.2) 100%);
             pointer-events: none;
-            z-index: 1;
+            z-index: 9999;
         }
 
-        @keyframes drift {
-            from { background-position: 0 0; }
-            to { background-position: 2000px 1000px; }
-        }
-
+        /* PARTICULAS */
         #particles {
             position: fixed;
             inset: 0;
@@ -56,6 +44,7 @@
             pointer-events: none;
         }
 
+        /* TARJETA PRINCIPAL */
         .wrapper {
             display: grid;
             grid-template-columns: 1fr minmax(320px, 900px) 1fr;
@@ -90,12 +79,14 @@
 
         .content { padding: 60px 40px; text-align: center; }
 
+        /* EFECTO DE VIBRACIÓN */
         h1 {
             font-size: 4rem;
             letter-spacing: 8px;
             margin: 0;
             text-transform: uppercase;
             color: #fff;
+            transition: text-shadow 0.3s ease;
         }
 
         .music-pulse {
@@ -104,7 +95,7 @@
 
         @keyframes pulse-audio {
             0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(127, 255, 212, 0.2); }
-            50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(127, 255, 212, 0.6); }
+            50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(127, 255, 212, 0.7); }
         }
 
         h2 { color: #7fffd4; font-weight: 300; letter-spacing: 3px; }
@@ -113,13 +104,12 @@
             opacity: 0;
             display: block;
             margin-bottom: 10px;
-            transform: translateY(10px);
             transition: 1s ease;
         }
 
-        #manifesto span.visible { opacity: 1; transform: translateY(0); }
+        #manifesto span.visible { opacity: 1; }
 
-        /* CONTROLES FLOTANTES */
+        /* BOTONES FLOTANTES */
         .controls {
             position: fixed;
             bottom: 30px;
@@ -142,10 +132,22 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 0 20px rgba(127, 255, 212, 0.4);
-            transition: 0.3s;
+            transition: transform 0.2s;
         }
 
-        .btn-float:hover { transform: scale(1.1); background: #fff; }
+        .btn-float:hover { transform: scale(1.1); }
+
+        /* HUELLAS */
+        .paw-print {
+            position: absolute;
+            width: 40px;
+            opacity: 0;
+            transition: 1s ease;
+            z-index: 3;
+            font-size: 30px;
+        }
+
+        .paw-print.visible { opacity: 0.3; }
 
         /* PANTALLA DE RASGUÑO */
         #scratchOverlay {
@@ -160,44 +162,25 @@
             transition: opacity 1s ease;
         }
 
-        #scratchSVG {
-            width: 80%;
-            max-width: 600px;
-            fill: none;
-            stroke: #1a1a1a;
-            stroke-width: 2;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
+        .scratch-line {
+            width: 2px;
+            height: 100%;
+            background: #1a1a1a;
+            margin: 0 10px;
+            transform: scaleY(0);
+            transition: transform 0.5s ease;
         }
-
-        #scratchSVG.animate {
-            animation: draw 1.2s ease-in forwards;
-        }
-
-        @keyframes draw { to { stroke-dashoffset: 0; opacity: 0; } }
-
-        /* HUELLAS */
-        .paw-print {
-            position: absolute;
-            width: 40px;
-            opacity: 0;
-            transition: 1.5s ease;
-            z-index: 3;
-            filter: invert(1);
-        }
-        .paw-print.visible { opacity: 0.2; }
     </style>
 </head>
 <body>
 
 <div id="scratchOverlay">
-    <svg id="scratchSVG" viewBox="0 0 100 100">
-        <path d="M20,10 Q30,50 20,90 M50,10 Q60,50 50,90 M80,10 Q90,50 80,90" />
-    </svg>
+    <div class="scratch-line" style="transition-delay: 0.1s;"></div>
+    <div class="scratch-line" style="transition-delay: 0.2s;"></div>
+    <div class="scratch-line" style="transition-delay: 0.3s;"></div>
 </div>
 
 <canvas id="particles"></canvas>
-<div class="fog"></div>
 
 <audio id="bgMusic" loop>
     <source src="sia-bird.mp3" type="audio/mpeg">
@@ -213,9 +196,8 @@
             <h1 id="ahyronTitle">Ahyron</h1>
             <h2>EL LOBO SALVAJE</h2>
             <p id="manifesto">
-                <span><strong>Nacido del silencio y la sombra.</strong></span>
+                <span>Nacido del silencio y la sombra.</span>
                 <span>Instinto puro, lealtad eterna.</span>
-                <span>Mira la noche sin temor.</span>
                 <span><strong>La manada es el camino.</strong></span>
             </p>
         </div>
@@ -224,20 +206,22 @@
 </div>
 
 <div class="controls">
-    <button id="musicToggle" class="btn-float" title="Música de Sia">🎵</button>
-    <button id="wolfVisionToggle" class="btn-float" title="Visión de Lobo">👁️</button>
+    <button id="musicToggle" class="btn-float">🎵</button>
+    <button id="wolfVisionToggle" class="btn-float">👁️</button>
 </div>
 
-<img src="https://www.svgrepo.com/show/41561/wolf-paw.svg" class="paw-print" style="top: 700px; left: 10%; transform: rotate(-20deg);">
-<img src="https://www.svgrepo.com/show/41561/wolf-paw.svg" class="paw-print" style="top: 1000px; right: 10%; transform: rotate(15deg);">
+<div class="paw-print" style="top: 800px; left: 15%;">🐾</div>
+<div class="paw-print" style="top: 1100px; right: 15%;">🐾</div>
+<div class="paw-print" style="top: 1400px; left: 20%;">🐾</div>
 
 <script>
     const music = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicToggle');
     const title = document.getElementById('ahyronTitle');
+    const musicBtn = document.getElementById('musicToggle');
+    const heroImage = document.getElementById('heroImage');
 
-    // 1. CONTROL DE MÚSICA (SIA - BIRD SET FREE)
-    function toggleMusic() {
+    // 1. CONTROL DE MÚSICA (Sia - Bird Set Free)
+    function togglePlay() {
         if (music.paused) {
             music.volume = 0.4;
             music.play();
@@ -250,81 +234,110 @@
         }
     }
 
-    musicBtn.addEventListener('click', toggleMusic);
+    musicBtn.addEventListener('click', togglePlay);
+
+    // Activar al primer clic en cualquier parte de la web
     document.addEventListener('click', () => {
-        if (music.paused) toggleMusic();
+        if (music.paused) togglePlay();
     }, { once: true });
 
-    // 2. ANIMACIÓN DE ENTRADA (RASGUÑO)
+    // 2. ANIMACIÓN DE ENTRADA
     window.addEventListener('load', () => {
-        document.getElementById('scratchSVG').classList.add('animate');
+        const lines = document.querySelectorAll('.scratch-line');
+        lines.forEach(l => l.style.transform = 'scaleY(1)');
+        
         setTimeout(() => {
             document.getElementById('scratchOverlay').style.opacity = '0';
-            const card = document.getElementById('mainCard');
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
+            const mainCard = document.getElementById('mainCard');
+            mainCard.style.opacity = '1';
+            mainCard.style.transform = 'translateY(0)';
             
             const spans = document.querySelectorAll('#manifesto span');
             spans.forEach((s, i) => {
-                setTimeout(() => s.classList.add('visible'), i * 600);
+                setTimeout(() => s.classList.add('visible'), i * 800);
             });
-        }, 1200);
+        }, 1000);
     });
 
-    // 3. VISIÓN DE LOBO
-    document.getElementById('wolfVisionToggle').addEventListener('click', () => {
-        document.body.classList.toggle('wolf-vision');
+    // 3. EFECTO PARALLAX EN LA IMAGEN
+    document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.pageX) / 40;
+        const y = (window.innerHeight / 2 - e.pageY) / 40;
+        heroImage.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
     });
 
-    // 4. PARTÍCULAS
+    // 4. SISTEMA DE PARTÍCULAS
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    const mouse = { x: null, y: null, radius: 120 };
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.x;
+        mouse.y = e.y;
+    });
+
+    class Particle {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            this.size = Math.random() * 2 + 1;
+            this.density = (Math.random() * 20) + 1;
+        }
+        draw() {
+            ctx.fillStyle = 'rgba(127, 255, 212, 0.4)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        update() {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx*dx + dy*dy);
+            if (distance < mouse.radius) {
+                this.x -= dx/15;
+                this.y -= dy/15;
+            } else {
+                this.x += (this.baseX - this.x) * 0.05;
+                this.y += (this.baseY - this.y) * 0.05;
+            }
+        }
+    }
 
     function initParticles() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         particles = [];
-        for (let i = 0; i < 80; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 2,
-                speed: Math.random() * 0.5 + 0.2
-            });
-        }
+        for (let i = 0; i < 120; i++) particles.push(new Particle());
     }
 
-    function animateParticles() {
+    function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(127, 255, 212, 0.3)";
-        particles.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            p.y -= p.speed;
-            if (p.y < 0) p.y = canvas.height;
-        });
-        requestAnimationFrame(animateParticles);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
     }
 
+    window.addEventListener('resize', initParticles);
     initParticles();
-    animateParticles();
+    animate();
 
-    // 5. SCROLL (HUELLAS)
-    window.addEventListener('scroll', () => {
-        document.querySelectorAll('.paw-print').forEach(paw => {
-            if (window.scrollY + window.innerHeight > paw.offsetTop + 100) {
-                paw.classList.add('visible');
-            }
-        });
+    // 5. VISIÓN DE LOBO
+    document.getElementById('wolfVisionToggle').addEventListener('click', () => {
+        document.body.classList.toggle('wolf-vision');
     });
 
-    // 6. PARALLAX IMAGEN
-    document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 50;
-        const y = (window.innerHeight / 2 - e.pageY) / 50;
-        document.getElementById('heroImage').style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+    // 6. APARECER HUELLAS AL HACER SCROLL
+    window.addEventListener('scroll', () => {
+        document.querySelectorAll('.paw-print').forEach(p => {
+            if (window.scrollY + window.innerHeight > p.offsetTop + 50) {
+                p.classList.add('visible');
+            }
+        });
     });
 </script>
 
